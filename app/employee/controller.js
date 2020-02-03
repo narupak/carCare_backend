@@ -1,11 +1,17 @@
 import EmployeeModel from "./model";
 
 const EmployeeController = {
-    getAll(req , res) {
-
-    },
     get(req , res) {
 
+    },
+    getAll(req , res) {
+        if(req.user){
+            EmployeeModel.getEmployee().then(rs=>{
+                res.status(200).json(rs)
+            })
+        }else{
+            res.status(401).json({ 'error' : 'UnAuthorized' })
+        }
     },
     create(req , res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
@@ -16,19 +22,17 @@ const EmployeeController = {
         })
     },
     login(req , res){
-        EmployeeModel.login(req.body).then(isValid=>{
-            if(!isValid){
+        EmployeeModel.getEmployeeByUsername(req.body).then(rs=>{
+            if(!rs.isValid){
             res
-                .header('Authorization' , `Bearer ${EmployeeModel.genToken(req)}`)
+                .header('Authorization' , rs.token)
                 .status(201)
-                .json({ user : {  'username' : req.body.username  ,  'password' : req.body.password }  })
-            } else{
+                .json(rs)
+            } else {
             res
                 .status(401)
                 .json({
-                    user : {
-                        errors : ['Invalid credentials']
-                    }
+                    result : false
                 })
             }
         })

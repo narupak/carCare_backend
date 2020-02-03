@@ -1,13 +1,10 @@
 import EmployeeModel from "./model";
 
 const EmployeeController = {
-    get(req , res) {
-
-    },
     getAll(req , res) {
         if(req.user){
             EmployeeModel.getEmployee().then(rs=>{
-                res.status(200).json(rs)
+                res.status(200).json( { result : true ,data : rs })
             })
         }else{
             res.status(401).json({ 'error' : 'UnAuthorized' })
@@ -36,6 +33,24 @@ const EmployeeController = {
                 })
             }
         })
+    },
+    edit(req , res){
+        if(req.user){
+            EmployeeModel.update(req.body).then(rs=>{
+                res.status(200).json( { result : true ,data : rs })
+            })
+        }else{
+            res.status(401).json({ 'error' : 'UnAuthorized' })
+        }
+    },
+    remove(req , res){
+        if(req.user){
+            EmployeeModel.delete(req.params.id).then(rs=>{
+                res.status(200).json( { result : true ,data : rs })
+            })
+        }else{
+            res.status(401).json({ 'error' : 'UnAuthorized' })
+        }
     }
 }
 export default EmployeeController

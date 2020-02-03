@@ -12,7 +12,7 @@ const EmployeeModel = {
                 let insertQuery = "INSERT INTO employee(employee_username , employee_password , employee_fname , employee_lname , employee_tel , status , position_id ) VALUES(?,?,?,?,?,?,?)";
                 let query = mysql.format(insertQuery, [req.username , hash , req.fname , req.lname , req.tel , req.status , req.position])
                 connection().query(query , (err , result)=>{
-                    if(err) throw reject(err)
+                    if(err) throw err
                     return resolve(result);
                 })
             })
@@ -74,6 +74,26 @@ const EmployeeModel = {
                 result.map(rs=>{
                     return resolve(rs)
                 })
+            })
+        })
+    },
+    update(user){
+        return new Promise((resolve , reject)=>{
+            let sql = "UPDATE employee SET employee_fname = ? , employee_lname = ? , employee_tel = ? WHERE employee_id = ?"
+            let query = mysql.format(sql , [user.fname , user.lname , user.tel , user.id])
+            connection().query(query , (err , result) => {
+                if(err) reject(err)
+                    return resolve(result)
+            })
+        })
+    },
+    delete(id){
+        return new Promise((resolve , reject)=>{
+            let sql = "DELETE FROM employee WHERE employee_id = ?"
+            let query = mysql.format(sql , [id])
+            connection().query(query , (err , result) => {
+                if(err) reject(err)
+                    return resolve(result)
             })
         })
     }

@@ -7,6 +7,7 @@ import car_detailController from "./car_detail/car_detailController"
 import reservationsController from "./reservations/reservationsController"
 import car_washController from "./car_wash/car_washController"
 import type_carController from "./type_car/type_carController"
+import clean_serviceController from "./clean_service/clean_serviceController"
 
 export function setup(router) {
     router
@@ -35,4 +36,5 @@ export function setup(router) {
         .delete('/deleteReservationsWrid/:id', reservationsController.deleteReservationsWrid)
         .get('/getAllCar_wash', car_washController.getAllCar_wash)
         .get('/getAllType_car', type_carController.getAllType_car)
+        .get('/getAllClean_service', clean_serviceController.getAllClean_service)
 }

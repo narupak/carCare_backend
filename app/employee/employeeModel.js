@@ -6,29 +6,29 @@ import { connection } from '../../db_connection';
 const EmployeeModel = {
     getAllEmployee() {
         return new Promise((resolve, reject) => {
-            let employeeList = [];
+            let getList = [];
             let sql = "SELECT * FROM employee"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
-                    employeeList.push(rs);
+                    getList.push(rs);
                 })
-                return resolve(employeeList)
+                return resolve(getList)
             })
         })
     },
     getEmployeeWpid2() {
         return new Promise((resolve, reject) => {
-            let employeeList = [];
+            let getList = [];
             let sql = "SELECT * FROM employee WHERE position_id = 2"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
-                    employeeList.push(rs);
+                    getList.push(rs);
                 })
-                return resolve(employeeList)
+                return resolve(getList)
             })
         })
     },

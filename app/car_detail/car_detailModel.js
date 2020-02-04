@@ -6,15 +6,15 @@ import { connection } from '../../db_connection';
 const car_detailModel = {
     getAllCar_detail() {
         return new Promise((resolve, reject) => {
-            let employeeList = [];
+            let getList = [];
             let sql = "SELECT * FROM car_detail"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
-                    employeeList.push(rs);
+                    getList.push(rs);
                 })
-                return resolve(employeeList)
+                return resolve(getList)
             })
         })
     },

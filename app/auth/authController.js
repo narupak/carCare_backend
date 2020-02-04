@@ -1,0 +1,21 @@
+import AuthModel from "./authModel";
+
+const AuthController = {
+    login(req, res) {
+        AuthModel.getEmployeeByUsername(req.body).then(rs => {
+            if (!rs.isValid) {
+                res
+                    .header('Authorization', rs.token)
+                    .status(201)
+                    .json(rs)
+            } else {
+                res
+                    .status(401)
+                    .json({
+                        result: false
+                    })
+            }
+        })
+    }
+}
+export default AuthController

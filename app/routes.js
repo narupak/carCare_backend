@@ -4,10 +4,10 @@ import memberController from "./member/memberController"
 import booking_detailController from "./booking_detail/booking_detailController"
 import carController from "./car/carController"
 import car_detailController from "./car_detail/car_detailController"
-import reservationsController from "./reservations/reservationsController"
 import car_washController from "./car_wash/car_washController"
 import type_carController from "./type_car/type_carController"
 import clean_serviceController from "./clean_service/clean_serviceController"
+import multi_joinController from "./multi_join/multi_joinController"
 
 export function setup(router) {
     router
@@ -35,4 +35,5 @@ export function setup(router) {
         .get('/getAllCar_wash', car_washController.getAllCar_wash)
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
+        .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
 }

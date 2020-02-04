@@ -18,6 +18,20 @@ const MemberModel = {
             })
         })
     },
+    getAllMemberWmfL(fname) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM members WHERE members_fname LIKE '" + fname + "__%'"
+            let query = mysql.format(sql)
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     getMemberWcid(id) {
         return new Promise((resolve, reject) => {
             let getList = [];

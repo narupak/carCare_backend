@@ -12,11 +12,15 @@ const MemberController = {
     },
     insertMember(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
-        MemberModel.insertMember(req.body).then(rs => {
-            res.status(201).json({
-                "result": "success"
+        if (req.user) {
+            MemberModel.insertMember(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
             })
-        })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
     },
     updateMemberSef_el_etWeid(req, res) {
         if (req.user) {

@@ -12,11 +12,15 @@ const carController = {
     },
     insertCar(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
-        carModel.insertCar(req.body).then(rs => {
-            res.status(201).json({
-                "result": "success"
+        if (req.user) {
+            carModel.insertCar(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
             })
-        })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
     },
     deleteCarWcid(req, res) {
         if (req.user) {

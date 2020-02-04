@@ -21,8 +21,8 @@ const MemberModel = {
     insertMember(req) {
         return new Promise((resolve, reject) => {
             bcrypt.hash(req.password, 12, (err, hash) => {
-                let insertQuery = "INSERT INTO members(members_username , members_password , members_fname , members_lname , members_address , members_tel , create_datetime ) VALUES(?,?,?,?,?,?,?)";
-                let query = mysql.format(insertQuery, [req.username, hash, req.fname, req.lname, req.address, req.tel, req.create_datetime])
+                let insertQuery = "INSERT INTO members(members_username , members_password , members_fname , members_lname , members_address , members_tel , create_datetime,member_cashier_id ) VALUES(?,?,?,?,?,?,?,?)";
+                let query = mysql.format(insertQuery, [req.username, hash, req.fname, req.lname, req.address, req.tel, req.create_datetime, req.cashier_id])
                 connection().query(query, (err, result) => {
                     if (err) throw err
                     return resolve(result);

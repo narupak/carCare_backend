@@ -21,11 +21,15 @@ const EmployeeController = {
     },
     insertEmployee(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
-        EmployeeModel.insertEmployee(req.body).then(rs => {
-            res.status(201).json({
-                "result": "success"
+        if (req.user) {
+            EmployeeModel.insertEmployee(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
             })
-        })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
     },
     updateEmployeeSef_el_etWeid(req, res) {
         if (req.user) {

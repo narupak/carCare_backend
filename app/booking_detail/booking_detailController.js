@@ -12,11 +12,15 @@ const Booking_detailController = {
     },
     insertBooking_detail(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
-        Booking_detailModel.insertBooking_detail(req.body).then(rs => {
-            res.status(201).json({
-                "result": "success"
+        if (req.user) {
+            Booking_detailModel.insertBooking_detail(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
             })
-        })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
     },
     deleteBooking_detailWeid(req, res) {
         if (req.user) {

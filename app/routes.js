@@ -4,6 +4,9 @@ import memberController from "./member/memberController"
 import booking_detailController from "./booking_detail/booking_detailController"
 import carController from "./car/carController"
 import car_detailController from "./car_detail/car_detailController"
+import reservationsController from "./reservations/reservationsController"
+import car_washController from "./car_wash/car_washController"
+import type_carController from "./type_car/type_carController"
 
 export function setup(router) {
     router
@@ -27,4 +30,9 @@ export function setup(router) {
         .get('/getAllCar_detail', car_detailController.getAllCar_detail)
         .post('/insertCar_detail', car_detailController.insertCar_detail)
         .delete('/deleteCar_detailWcdid/:id', car_detailController.deleteCar_detailWcdid)
+        .get('/getAllReservations', reservationsController.getAllReservations)
+        .post('/insertReservations', reservationsController.insertReservations)
+        .delete('/deleteReservationsWrid/:id', reservationsController.deleteReservationsWrid)
+        .get('/getAllCar_wash', car_washController.getAllCar_wash)
+        .get('/getAllType_car', type_carController.getAllType_car)
 }

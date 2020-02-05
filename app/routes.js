@@ -10,6 +10,7 @@ import clean_serviceController from "./clean_service/clean_serviceController"
 import multi_joinController from "./multi_join/multi_joinController"
 import positionController from "./position/positionController"
 import ReservationsController from "./reservations/reservationsController"
+import clean_service_detailController from "./clean_service_detail/clean_service_detailController"
 
 export function setup(router) {
     router
@@ -39,7 +40,11 @@ export function setup(router) {
         .get('/getAllCar_wash', car_washController.getAllCar_wash)
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
-        .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllPosition', positionController.getAllPosition)
         .post('/insertReservations', ReservationsController.insertReservations)
+        .post('/insertClean_service_detail', clean_service_detailController.insertClean_service_detail)
+        .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
+        .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)
+        .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
+        .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
 }

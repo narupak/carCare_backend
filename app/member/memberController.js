@@ -43,7 +43,9 @@ const MemberController = {
     updateMemberSef_el_etWeid(req, res) {
         if (req.user) {
             MemberModel.updateMemberSef_el_etWeid(req.body).then(rs => {
-                res.status(200).json({ result: true, data: rs })
+                res.status(201).json({
+                    "result": "success"
+                })
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })

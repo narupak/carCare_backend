@@ -34,6 +34,7 @@ export function setup(router) {
         .delete('/deleteCarWcid/:id', carController.deleteCarWcid)
         .get('/getAllCar_detail', car_detailController.getAllCar_detail)
         .post('/insertCar_detail', car_detailController.insertCar_detail)
+        .patch('/updateCar_detailSm_cid_tcidWcdid', car_detailController.updateCar_detailSm_cid_tcidWcdid)
         .delete('/deleteCar_detailWcdid/:id', car_detailController.deleteCar_detailWcdid)
         .get('/getAllCar_wash', car_washController.getAllCar_wash)
         .get('/getAllType_car', type_carController.getAllType_car)

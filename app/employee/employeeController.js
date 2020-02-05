@@ -19,9 +19,9 @@ const EmployeeController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
-    getEmployeeWpidN2(req, res) {
+    getEmployeeWpidN12(req, res) {
         if (req.user) {
-            EmployeeModel.getEmployeeWpidN2().then(rs => {
+            EmployeeModel.getEmployeeWpidN12().then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

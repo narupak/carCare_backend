@@ -9,13 +9,14 @@ import type_carController from "./type_car/type_carController"
 import clean_serviceController from "./clean_service/clean_serviceController"
 import multi_joinController from "./multi_join/multi_joinController"
 import positionController from "./position/positionController"
+import ReservationsController from "./reservations/reservationsController"
 
 export function setup(router) {
     router
         .post('/login', authController.login)
         .get('/getAllEmployee', employeeController.getAllEmployee)
         .get('/getEmployeeWpid2', employeeController.getEmployeeWpid2)
-        .get('/getEmployeeWpidN2', employeeController.getEmployeeWpidN2)
+        .get('/getEmployeeWpidN12', employeeController.getEmployeeWpidN12)
         .post('/insertEmployee', employeeController.insertEmployee)
         .patch('/updateEmployeeSef_el_etWeid', employeeController.updateEmployeeSef_el_etWeid)
         .delete('/deleteEmployeeWeid/:id', employeeController.deleteEmployeeWeid)
@@ -39,4 +40,5 @@ export function setup(router) {
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllPosition', positionController.getAllPosition)
+        .post('/insertReservations', ReservationsController.insertReservations)
 }

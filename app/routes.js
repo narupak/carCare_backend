@@ -8,6 +8,7 @@ import car_washController from "./car_wash/car_washController"
 import type_carController from "./type_car/type_carController"
 import clean_serviceController from "./clean_service/clean_serviceController"
 import multi_joinController from "./multi_join/multi_joinController"
+import positionController from "./position/positionController"
 
 export function setup(router) {
     router
@@ -36,4 +37,5 @@ export function setup(router) {
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
+        .get('/getAllPosition', positionController.getAllPosition)
 }

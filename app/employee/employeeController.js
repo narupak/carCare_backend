@@ -19,6 +19,15 @@ const EmployeeController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getEmployeeWpidN2(req, res) {
+        if (req.user) {
+            EmployeeModel.getEmployeeWpidN2().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     insertEmployee(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
         if (req.user) {

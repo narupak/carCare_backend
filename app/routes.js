@@ -15,6 +15,7 @@ export function setup(router) {
         .post('/login', authController.login)
         .get('/getAllEmployee', employeeController.getAllEmployee)
         .get('/getEmployeeWpid2', employeeController.getEmployeeWpid2)
+        .get('/getEmployeeWpidN2', employeeController.getEmployeeWpidN2)
         .post('/insertEmployee', employeeController.insertEmployee)
         .patch('/updateEmployeeSef_el_etWeid', employeeController.updateEmployeeSef_el_etWeid)
         .delete('/deleteEmployeeWeid/:id', employeeController.deleteEmployeeWeid)

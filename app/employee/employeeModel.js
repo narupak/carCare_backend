@@ -32,6 +32,20 @@ const EmployeeModel = {
             })
         })
     },
+    getEmployeeWpidN2() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM employee WHERE position_id != 2"
+            let query = mysql.format(sql)
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     insertEmployee(req) {
         return new Promise((resolve, reject) => {
             bcrypt.hash(req.password, 12, (err, hash) => {

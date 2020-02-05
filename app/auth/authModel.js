@@ -14,7 +14,7 @@ const AuthModel = {
                 if (err) throw err
                 result.map(rs => {
                     const hash = req.password
-                    bcrypt.compare(rs.employee_password, hash, (err, isValid) => {
+                    bcrypt.compare(hash, rs.employee_password ,(err, isValid) => {
                         if (err) throw err
                         const employee = {
                             id: rs.employee_id,
@@ -25,7 +25,7 @@ const AuthModel = {
                             tel: rs.employee_tel,
                             status: rs.status,
                             position: rs.position_id,
-                            result: !isValid,
+                            result: isValid,
                             token: `Bearer ${this.genToken(rs)}`
                         }
                         return resolve(employee)

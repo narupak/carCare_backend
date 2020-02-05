@@ -3,7 +3,7 @@ import AuthModel from "./authModel";
 const AuthController = {
     login(req, res) {
         AuthModel.getEmployeeByUsername(req.body).then(rs => {
-            if (!rs.isValid) {
+            if (rs.result !== false) {
                 res
                     .header('Authorization', rs.token)
                     .status(201)

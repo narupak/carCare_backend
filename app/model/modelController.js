@@ -3,7 +3,7 @@ import ModelModel from "./modelModel"
 const ModelController = {
     getAllModel(req, res) {
         if (req.user) {
-            ModelModel.getAllModel.then(rs => {
+            ModelModel.getAllModel().then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

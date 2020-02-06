@@ -2,11 +2,12 @@ import PromotionModel from "./promotionModel"
 const moment = require('moment');
 
 const PromotionController = {
-    getAllPromotion(req, res) {
+    async getAllPromotion(req, res) {
         if (req.user) {
-            PromotionModel.getAllPromotion().then(rs => {
-                res.status(200).json({ result: true, data: rs })
-            })
+
+            let getAllPromotion = await PromotionModel.getAllPromotion()
+            res.status(200).json({ result: true, data: getAllPromotion })
+
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }

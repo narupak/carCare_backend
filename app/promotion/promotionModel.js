@@ -6,7 +6,7 @@ const PromotionModel = {
     getAllPromotion() {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM promotion"
+            let sql = "SELECT promotion_id,detail,DATE_FORMAT(date_start,'%Y-%m-%d') as date_start ,DATE_FORMAT(date_end,'%Y-%m-%d') as date_end,discount_percent FROM promotion"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)

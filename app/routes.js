@@ -17,6 +17,7 @@ export function setup(router) {
     router
         .post('/login', authController.login)
         .get('/getAllEmployee', employeeController.getAllEmployee)
+        .get('/getEmployeeWeid/:id', employeeController.getEmployeeWeid)
         .get('/getEmployeeWpid2', employeeController.getEmployeeWpid2)
         .get('/getEmployeeWpidN12', employeeController.getEmployeeWpidN12)
         .post('/insertEmployee', employeeController.insertEmployee)

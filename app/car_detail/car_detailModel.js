@@ -21,7 +21,7 @@ const car_detailModel = {
     insertCar_detail(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO car_detail(model_id,car_id,type_car_id) VALUES(?,?,?)";
-            let query = mysql.format(insertQuery, [req.model, req.car_id, req.type_car_id])
+            let query = mysql.format(insertQuery, [req.model_id, req.car_id, req.type_car_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);
@@ -31,7 +31,7 @@ const car_detailModel = {
     updateCar_detailSm_cid_tcidWcdid(req) {
         return new Promise((resolve, reject) => {
             let updateQuery = "UPDATE car_detail SET model_id = ?,car_id = ? ,type_car_id = ? WHERE car_detail_id = ?";
-            let query = mysql.format(updateQuery, [req.model, req.car_id, req.type_car_id, req.car_detail_id])
+            let query = mysql.format(updateQuery, [req.model_id, req.car_id, req.type_car_id, req.car_detail_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

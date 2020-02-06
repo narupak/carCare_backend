@@ -10,6 +10,15 @@ const EmployeeController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getEmployeeWeid(req, res) {
+        if (req.user) {
+            EmployeeModel.getEmployeeWeid(req.params.id).then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     getEmployeeWpid2(req, res) {
         if (req.user) {
             EmployeeModel.getEmployeeWpid2().then(rs => {

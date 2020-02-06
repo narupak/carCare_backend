@@ -18,6 +18,20 @@ const EmployeeModel = {
             })
         })
     },
+    getEmployeeWeid(id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM employee WHERE employee_id = ?"
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     getEmployeeWpid2() {
         return new Promise((resolve, reject) => {
             let getList = [];

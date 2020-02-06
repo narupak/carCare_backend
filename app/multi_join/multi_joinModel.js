@@ -32,5 +32,19 @@ const Multi_joinModel = {
             })
         })
     },
+    getAllCar_detailJClean_serviceJModelJCarJType_car() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM car_detail as cd LEFT JOIN model as m ON cd.model = m.model_id LEFT JOIN car as c ON cd.car_id = c.car_id LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id"
+            let query = mysql.format(sql)
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
 }
 export default Multi_joinModel

@@ -54,4 +54,5 @@ export function setup(router) {
         .delete('/deleteWash_toolWwtid/:id', wash_toolController.deleteWash_toolWwtid)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
+        .get('/getAllCar_detailJClean_serviceJModelJCarJType_car', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_car)
 }

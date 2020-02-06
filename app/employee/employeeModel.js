@@ -35,7 +35,7 @@ const EmployeeModel = {
     getEmployeeWpidN12() {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM employee WHERE position_id NOT IN (1,2)"
+            let sql = "SELECT * FROM employee as ep LEFT JOIN position as ps ON ep.position_id = ps.position_id WHERE ep.position_id NOT IN (1,2)"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)

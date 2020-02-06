@@ -11,6 +11,7 @@ import multi_joinController from "./multi_join/multi_joinController"
 import positionController from "./position/positionController"
 import ReservationsController from "./reservations/reservationsController"
 import clean_service_detailController from "./clean_service_detail/clean_service_detailController"
+import wash_toolController from "./wash_tool/wash_toolController"
 
 export function setup(router) {
     router
@@ -46,6 +47,10 @@ export function setup(router) {
         .post('/insertClean_service_detail', clean_service_detailController.insertClean_service_detail)
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
         .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)
+        .get('/getAllWash_tool', wash_toolController.getAllWash_tool)
+        .post('/insertWash_tool', wash_toolController.insertWash_tool)
+        .patch('/updateWash_toolStn_am_tsWwtid', wash_toolController.updateWash_toolStn_am_tsWwtid)
+        .delete('/deleteWash_toolWwtid/:id', wash_toolController.deleteWash_toolWwtid)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
 }

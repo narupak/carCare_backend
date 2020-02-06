@@ -41,6 +41,7 @@ export function setup(router) {
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
         .get('/getAllPosition', positionController.getAllPosition)
+        .get('/getPositionWN1A2', positionController.getPositionWN1A2)
         .post('/insertReservations', ReservationsController.insertReservations)
         .post('/insertClean_service_detail', clean_service_detailController.insertClean_service_detail)
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)

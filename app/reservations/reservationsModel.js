@@ -18,10 +18,20 @@ const ReservationsModel = {
             })
         })
     },
+    getTotalPrice(id) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT service_price FROM clean_service_detail WHERE clean_service_detail_id = ?"
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
     insertReservations(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,promotion_id ) VALUES(?,?,?,?,?,?,?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.license, req.total_price, req.reserv_date, req.start_date, req.end_date, req.reserv_status, req.user.employee_id, req.members_id, req.car_wash_id, req.promotion_id])
+            let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,type_car_id,position_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.body.license, req.body.total_price, req.body.reserv_date, req.body.start_date, req.body.end_date, 1, req.user.employee_id, req.body.members_id, req.body.carwash, req.body.type_car_id, 0])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

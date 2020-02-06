@@ -13,6 +13,7 @@ import reservationsController from "./reservations/reservationsController"
 import clean_service_detailController from "./clean_service_detail/clean_service_detailController"
 import wash_toolController from "./wash_tool/wash_toolController"
 import modelController from "./model/modelController"
+import promotionController from "./promotion/promotionController"
 
 
 export function setup(router) {
@@ -54,6 +55,10 @@ export function setup(router) {
         .post('/insertWash_tool', wash_toolController.insertWash_tool)
         .patch('/updateWash_toolStn_am_tsWwtid', wash_toolController.updateWash_toolStn_am_tsWwtid)
         .delete('/deleteWash_toolWwtid/:id', wash_toolController.deleteWash_toolWwtid)
+        .get('/getAllPromotion', promotionController.getAllPromotion)
+        .post('/insertPromotion', promotionController.insertPromotion)
+        .patch('/updatePromotionWpmid', promotionController.updatePromotionWpmid)
+        .delete('/deletePromotionWpmid/:id', promotionController.deletePromotionWpmid)
         .get('/getAllModel', modelController.getAllModel)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)

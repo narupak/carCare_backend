@@ -24,7 +24,6 @@ const ReservationsController = {
 
             req.body.total_price = total
             let formatDateAndTime = await formatDate(req.body.reserveDateTime, timeDutation)
-            console.log(formatDateAndTime)
             req.body.reserv_date = formatDateAndTime.formatDate
             req.body.start_date = formatDateAndTime.startTime
             req.body.end_date = formatDateAndTime.endTime

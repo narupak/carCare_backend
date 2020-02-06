@@ -20,7 +20,7 @@ const ReservationsModel = {
     },
     getTotalPrice(id) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT service_price FROM clean_service_detail WHERE clean_service_detail_id = ?"
+            let sql = "SELECT service_price,service_duration FROM clean_service_detail WHERE clean_service_detail_id = ?"
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

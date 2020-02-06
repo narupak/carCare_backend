@@ -15,13 +15,16 @@ const ReservationsController = {
         if (req.user) {
             let total = 0
             let id = req.body.clean_service_detail_id
+            let timeDutation = []
             for (let i = 0; i < id.length; i++) {
                 let response = await ReservationsModel.getTotalPrice(id[i])
                 total += response[0].service_price
+                timeDutation.push(response[0].service_duration)
             }
 
             req.body.total_price = total
-            let formatDateAndTime = formatDate(req.body.reserveDateTime, req.body.clean_servie)
+            let formatDateAndTime = await formatDate(req.body.reserveDateTime, timeDutation)
+            console.log(formatDateAndTime)
             req.body.reserv_date = formatDateAndTime.formatDate
             req.body.start_date = formatDateAndTime.startTime
             req.body.end_date = formatDateAndTime.endTime
@@ -47,13 +50,10 @@ const ReservationsController = {
 }
 export default ReservationsController
 
-let formatDate = (date, time) => {
-    let today = new Date(date)
-    let dd = String(today.getDate()).padStart(2, '0')
-    let mm = String(today.getMonth() + 1).padStart(2, '0')
-    let yyyy = today.getFullYear()
+let formatDate = async(date, time) => {
+    let formatDate = moment(date).format('YYYY-MM-DD')
 
-    let startTime = date.split(" ")[4]
+    let startTime = moment(date).format('hh:mm:ss')
 
     let sumH = 0
     let sumM = 0
@@ -64,10 +64,10 @@ let formatDate = (date, time) => {
         sumS += Number(time[i].split(":")[2])
     }
 
-    let endTime = moment(today).add(sumH, 'hours').add(sumM, 'minutes').add(sumS, 'seconds').format('hh:mm:ss')
+    let endTime = moment(date).add(sumH, 'hours').add(sumM, 'minutes').add(sumS, 'seconds').format('hh:mm:ss')
 
     return {
-        formatDate: yyyy + '-' + mm + '-' + dd,
+        formatDate: formatDate,
         startTime: startTime,
         endTime: endTime
     }

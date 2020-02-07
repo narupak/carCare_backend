@@ -14,7 +14,7 @@ import clean_service_detailController from "./clean_service_detail/clean_service
 import wash_toolController from "./wash_tool/wash_toolController"
 import modelController from "./model/modelController"
 import promotionController from "./promotion/promotionController"
-
+import upload_imgController from "./upload_img/upload_imgController"
 
 export function setup(router) {
     router
@@ -63,4 +63,5 @@ export function setup(router) {
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
         .get('/getAllCar_detailJClean_serviceJModelJCarJType_car', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_car)
+        .post('/updateProfile', upload_imgController.upload_img)
 }

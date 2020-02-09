@@ -15,6 +15,7 @@ import wash_toolController from "./wash_tool/wash_toolController"
 import modelController from "./model/modelController"
 import promotionController from "./promotion/promotionController"
 import upload_imgController from "./upload_img/upload_imgController"
+import withdraw_returnController from "./withdraw_return/withdraw_returnController"
 
 export function setup(router) {
     router
@@ -60,8 +61,12 @@ export function setup(router) {
         .patch('/updatePromotionWpmid', promotionController.updatePromotionWpmid)
         .delete('/deletePromotionWpmid/:id', promotionController.deletePromotionWpmid)
         .get('/getAllModel', modelController.getAllModel)
+        .post('/updateProfile', upload_imgController.upload_img)
+        .post('/insertWithdraw_return', withdraw_returnController.insertWithdraw_return)
+        .post('/updateWash_toolSedWwrid', withdraw_returnController.updateWash_toolSedWwrid)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
         .get('/getAllCar_detailJClean_serviceJModelJCarJType_car', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_car)
-        .post('/updateProfile', upload_imgController.upload_img)
+        .get('/getAllWithdraw_returnJWash_toolJEmployee', multi_joinController.getAllWithdraw_returnJWash_toolJEmployee)
+
 }

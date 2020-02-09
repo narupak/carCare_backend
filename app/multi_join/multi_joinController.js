@@ -28,5 +28,14 @@ const Multi_joinController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getAllWithdraw_returnJWash_toolJEmployee(req, res) {
+        if (req.user) {
+            Multi_joinModel.getAllWithdraw_returnJWash_toolJEmployee().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default Multi_joinController

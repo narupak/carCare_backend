@@ -36,5 +36,15 @@ const Withdraw_returnController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    async updatWithdraw_returnSasWwrid(req, res) {
+        if (req.user) {
+            await Withdraw_returnModel.updatWithdraw_returnSasWwrid(req.body)
+            res.status(201).json({
+                "result": "success",
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default Withdraw_returnController

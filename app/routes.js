@@ -64,6 +64,7 @@ export function setup(router) {
         .post('/updateProfile', upload_imgController.upload_img)
         .post('/insertWithdraw_return', withdraw_returnController.insertWithdraw_return)
         .post('/updateWash_toolSedWwrid', withdraw_returnController.updateWash_toolSedWwrid)
+        .post('/updatWithdraw_returnSasWwrid', withdraw_returnController.updatWithdraw_returnSasWwrid)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
         .get('/getAllCar_detailJClean_serviceJModelJCarJType_car', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_car)

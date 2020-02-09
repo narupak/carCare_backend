@@ -6,7 +6,7 @@ const Withdraw_returnModel = {
     insertWithdraw_return(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO withdraw_return(wash_tool_id , withdraw_amount, date_start , approve_status , employee_id, status_action) VALUES(?,?,?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.wash_tool_id, req.amount, req.date_start, req.tool_status, req.employee_id, req.status_action])
+            let query = mysql.format(insertQuery, [req.wash_tool_id, req.amount, req.date_start, req.approve_status, req.employee_id, req.status_action])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

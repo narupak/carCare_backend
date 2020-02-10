@@ -26,12 +26,13 @@ const ReservationsController = {
             let formatDateAndTime = await formatDate(req.body.reserveDateTime, timeDutation)
             req.body.reserv_date = formatDateAndTime.formatDate
             req.body.start_date = formatDateAndTime.startTime
-            req.body.end_date = formatDateAndTime.endTime
+            let end_date = formatDateAndTime.endTime
 
             await ReservationsModel.insertReservations(req)
 
             res.status(201).json({
                 "result": "success",
+                "end_date": end_date.toString()
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })

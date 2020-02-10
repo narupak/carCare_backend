@@ -35,8 +35,13 @@ export function setup() {
     });
     app.use(auth);
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
+    // app.use(bodyParser.json());
+    app.use(bodyParser.json({
+        extended: true,
+        limit: '50mb'
+    }))
     setupRoutes(app);
+    // "192.168.163.2"
     app.listen(PORT, () => {
         console.log('App listening on http://localhost:' + PORT);
     });

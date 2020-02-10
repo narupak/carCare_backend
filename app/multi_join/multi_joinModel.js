@@ -1,6 +1,5 @@
 const mysql = require('mysql');
 
-import bcrypt from 'bcrypt'
 import { connection } from '../../db_connection';
 
 const Multi_joinModel = {

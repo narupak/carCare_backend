@@ -11,6 +11,15 @@ const ReservationsController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getReservationsWcwidORrsidDESC(req, res) {
+        if (req.user) {
+            ReservationsModel.getReservationsWcwidORrsidDESC(req.params.id).then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     async insertReservations(req, res) {
         if (req.user) {
             let total = 0

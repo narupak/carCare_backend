@@ -28,6 +28,16 @@ const ReservationsModel = {
             })
         })
     },
+    getReservationsWcwidORrsidDESC(id) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM reservations WHERE car_wash_id = ? ORDER BY reserv_id DESC"
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
     insertReservations(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,type_car_id,clean_service_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?)";

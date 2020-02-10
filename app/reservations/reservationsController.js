@@ -23,16 +23,12 @@ const ReservationsController = {
             }
 
             req.body.total_price = total
-            let formatDateAndTime = await formatDate(req.body.reserveDateTime, timeDutation)
-            req.body.reserv_date = formatDateAndTime.formatDate
-            req.body.start_date = formatDateAndTime.startTime
-            let end_date = formatDateAndTime.endTime
+            req.body.end_date = await formatDate(req.body.reserveTime, timeDutation)
 
-            await ReservationsModel.insertReservations(req)
+            await ReservationsModel.insertReservations(req.body)
 
             res.status(201).json({
                 "result": "success",
-                "end_date": end_date.toString()
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
@@ -50,25 +46,19 @@ const ReservationsController = {
 }
 export default ReservationsController
 
-let formatDate = async(date, time) => {
-    let formatDate = moment(date).format('YYYY-MM-DD')
+let formatDate = async(startTime, timeDuration) => {
+    // let formatDate = moment(date).format('YYYY-MM-DD')
 
-    let startTime = moment(date).format('hh:mm:ss')
+    // let startTime = moment(date).format('hh:mm:ss')
 
     let sumH = 0
     let sumM = 0
     let sumS = 0
-    for (let i = 0; i < time.length; i++) {
-        sumH += Number(time[i].split(":")[0])
-        sumM += Number(time[i].split(":")[1])
-        sumS += Number(time[i].split(":")[2])
+    for (let i = 0; i < timeDuration.length; i++) {
+        sumH += Number(timeDuration[i].split(":")[0])
+        sumM += Number(timeDuration[i].split(":")[1])
+        sumS += Number(timeDuration[i].split(":")[2])
     }
 
-    let endTime = moment(date).add(sumH, 'hours').add(sumM, 'minutes').add(sumS, 'seconds').format('hh:mm:ss')
-
-    return {
-        formatDate: formatDate,
-        startTime: startTime,
-        endTime: endTime
-    }
+    return moment(startTime).add(sumH, 'hours').add(sumM, 'minutes').add(sumS, 'seconds').format('hh:mm:ss')
 }

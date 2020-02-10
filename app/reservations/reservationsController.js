@@ -24,9 +24,10 @@ const ReservationsController = {
 
             req.body.total_price = total
             req.body.end_date = await formatDate(req.body.reserveTime, timeDutation)
-
-            await ReservationsModel.insertReservations(req.body)
-
+            for (let i = 0; i < id.length; i++) {
+                req.body.clean_service_id = id[i]
+                await ReservationsModel.insertReservations(req.body)
+            }
             res.status(201).json({
                 "result": "success",
             })

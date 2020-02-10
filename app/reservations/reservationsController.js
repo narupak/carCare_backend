@@ -54,12 +54,12 @@ let formatDate = async(startTime, timeDuration) => {
 
     let sumH = 0
     let sumM = 0
-    let sumS = 0
+
     for (let i = 0; i < timeDuration.length; i++) {
         sumH += Number(timeDuration[i].split(":")[0])
         sumM += Number(timeDuration[i].split(":")[1])
-        sumS += Number(timeDuration[i].split(":")[2])
     }
 
-    return moment(startTime).add(sumH, 'hours').add(sumM, 'minutes').add(sumS, 'seconds').format('hh:mm:ss')
+    startTime = moment(startTime).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm')
+    return startTime
 }

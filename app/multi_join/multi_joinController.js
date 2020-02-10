@@ -37,5 +37,14 @@ const Multi_joinController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(req, res) {
+        if (req.user) {
+            Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default Multi_joinController

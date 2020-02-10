@@ -48,9 +48,9 @@ const ReservationsController = {
 export default ReservationsController
 
 let formatDate = async(startTime, timeDuration) => {
-    // let formatDate = moment(date).format('YYYY-MM-DD')
 
-    // let startTime = moment(date).format('hh:mm:ss')
+    let formatDate = new Date(2018, 11, 24, startTime.split(":")[0], startTime.split(":")[1], 0, 0)
+    formatDate = moment(formatDate).format('LLLL')
 
     let sumH = 0
     let sumM = 0
@@ -60,6 +60,6 @@ let formatDate = async(startTime, timeDuration) => {
         sumM += Number(timeDuration[i].split(":")[1])
     }
 
-    startTime = moment(startTime).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm')
-    return startTime
+    formatDate = moment(formatDate).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm:ss')
+    return formatDate
 }

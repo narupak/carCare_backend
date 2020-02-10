@@ -49,7 +49,7 @@ const Multi_joinModel = {
     getAllWithdraw_returnJWash_toolJEmployee() {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM withdraw_return as wr LEFT JOIN wash_tool as wt ON wr.wash_tool_id = wt.wash_tool_id LEFT JOIN employee as em ON wt.employee_id = em.employee_id"
+            let sql = "SELECT if(wr.date_start is not null,DATE_FORMAT(wr.date_start,'%Y-%m-%d'),null) as date_start , if(wr.date_end is not null,DATE_FORMAT(wr.date_end,'%Y-%m-%d'),null) as date_end FROM withdraw_return  as wr LEFT JOIN wash_tool as wt ON wr.wash_tool_id = wt.wash_tool_id LEFT JOIN employee as em ON wt.employee_id = em.employee_id"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)

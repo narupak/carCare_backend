@@ -30,7 +30,7 @@ const ReservationsModel = {
     },
     getReservationsWcwidORrsidDESC(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM reservations WHERE car_wash_id = ? AND employee_id = ? ORDER BY reserv_id DESC"
+            let sql = "SELECT *,if(start_date is not null,DATE_FORMAT(start_date,'%Y-%m-%d'),null) as start_date , if(end_date is not null,DATE_FORMAT(end_date,'%Y-%m-%d'),null) as end_date FROM reservations WHERE car_wash_id = ? AND employee_id = ? ORDER BY reserv_id DESC"
             let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

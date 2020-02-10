@@ -13,7 +13,7 @@ const ReservationsController = {
     },
     getReservationsWcwidORrsidDESC(req, res) {
         if (req.user) {
-            ReservationsModel.getReservationsWcwidORrsidDESC(req.params.id).then(rs => {
+            ReservationsModel.getReservationsWcwidORrsidDESC(req.body).then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

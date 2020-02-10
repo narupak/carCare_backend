@@ -28,10 +28,10 @@ const ReservationsModel = {
             })
         })
     },
-    getReservationsWcwidORrsidDESC(id) {
+    getReservationsWcwidORrsidDESC() {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM reservations WHERE car_wash_id = ? ORDER BY reserv_id DESC"
-            let query = mysql.format(sql, [id])
+            let sql = "SELECT * FROM reservations WHERE car_wash_id = ? AND employee_id = ? ORDER BY reserv_id DESC"
+            let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)

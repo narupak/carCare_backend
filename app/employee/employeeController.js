@@ -13,7 +13,37 @@ const EmployeeController = {
     getEmployeeWeid(req, res) {
         if (req.user) {
             EmployeeModel.getEmployeeWeid(req.params.id).then(rs => {
-                res.status(200).json({ result: true, data: rs })
+                let formReturn = {};
+                const result = rs.map(result=>{
+                    if(result.employee_image == null){
+                        formReturn = {
+                            employee_id : result.employee_id,
+                            employee_username : result.employee_username,
+                            employee_password : result.employee_password,
+                            employee_fname : result.employee_fname,
+                            employee_lname : result.employee_lname,
+                            employee_tel : result.employee_tel,
+                            employee_image : result.employee_image,
+                            status : result.status,
+                            position_id : result.position_id
+                        }
+                        return formReturn;
+                    }else{
+                        formReturn = {
+                            employee_id : result.employee_id,
+                            employee_username : result.employee_username,
+                            employee_password : result.employee_password,
+                            employee_fname : result.employee_fname,
+                            employee_lname : result.employee_lname,
+                            employee_tel : result.employee_tel,
+                            employee_image : result.employee_image.toString(),
+                            status : result.status,
+                            position_id : result.position_id
+                        }
+                        return formReturn;
+                    }
+                })
+                res.status(200).json({ result: true, data: result })
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })

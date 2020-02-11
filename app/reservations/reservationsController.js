@@ -1,4 +1,5 @@
 import ReservationsModel from "./reservationsModel"
+import QueueModel from "../queue/queueModel"
 const moment = require('moment');
 
 const ReservationsController = {
@@ -22,6 +23,10 @@ const ReservationsController = {
     },
     async insertReservations(req, res) {
         if (req.user) {
+            await QueueModel.insertQueue(req)
+            let queue = await QueueModel.getQueueLqid()
+            req.body.queue_id = queue[0].queue_id
+
             let total = 0
             let id = req.body.clean_service_detail_id
             let timeDutation = []

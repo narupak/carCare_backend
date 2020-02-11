@@ -40,8 +40,8 @@ const ReservationsModel = {
     },
     insertReservations(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,type_car_id,clean_service_detail_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.license, req.total_price, req.reserveDate, req.reserveTime, req.end_date, 0, req.employee_id, req.members_id, req.carwash, req.type_car_id, req.clean_service_detail_id])
+            let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,type_car_id,clean_service_detail_id,queue_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.license, req.total_price, req.reserveDate, req.reserveTime, req.end_date, 0, req.employee_id, req.members_id, req.carwash, req.type_car_id, req.clean_service_detail_id, req.queue_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

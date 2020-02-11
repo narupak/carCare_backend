@@ -50,6 +50,7 @@ export function setup(router) {
         .get('/getPositionWN1A2', positionController.getPositionWN1A2)
         .post('/getReservationsWcwidORrsidDESC', reservationsController.getReservationsWcwidORrsidDESC)
         .post('/insertReservations', reservationsController.insertReservations)
+        .patch('/updateReservationsSrsWrsid', reservationsController.updateReservationsSrsWrsid)
         .post('/insertClean_service_detail', clean_service_detailController.insertClean_service_detail)
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
         .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)

@@ -49,6 +49,16 @@ const ReservationsController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    async updateReservationsSrsWrsid(req, res) {
+        if (req.user) {
+            await ReservationsModel.updateReservationsSrsWrsid(req.body)
+            res.status(201).json({
+                "result": "success",
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     deleteReservationsWrid(req, res) {
         if (req.user) {
             ReservationsModel.deleteReservationsWrid(req.params.id).then(rs => {

@@ -30,7 +30,7 @@ const ReservationsModel = {
     },
     getReservationsWcwidORrsidDESC(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT *,if(reserv_date is not null,DATE_FORMAT(reserv_date,'%Y-%m-%d'),null) as reserv_date FROM reservations WHERE car_wash_id = ? AND employee_id = ? ORDER BY reserv_id DESC"
+            let sql = "SELECT *,if(reserv_date is not null,DATE_FORMAT(reserv_date,'%Y-%m-%d'),null) as reserv_date FROM reservations WHERE car_wash_id = ? AND employee_id = ? GROUP BY start_date  ORDER BY reserv_id DESC"
             let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

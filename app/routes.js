@@ -75,4 +75,5 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd)
         .get('/getAllQueueJReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeid/:id', multi_joinController.getAllQueueJReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeid)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd)
+        .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
 }

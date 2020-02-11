@@ -62,7 +62,7 @@ let formatDate = async(startTime, timeDuration) => {
     formatDate = moment(formatDate).format('LLLL')
 
     let sumH = 0
-    let sumM = 0
+    let sumM = 5
 
     for (let i = 0; i < timeDuration.length; i++) {
         sumH += Number(timeDuration[i].split(":")[0])

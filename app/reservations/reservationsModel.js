@@ -49,7 +49,7 @@ const ReservationsModel = {
     updateReservationsSrsWrsid(req) {
         return new Promise((resolve, reject) => {
             let updateQuery = "UPDATE reservations SET reserv_status = ? WHERE reserv_id = ?";
-            let query = mysql.format(updateQuery, [req.reserv_status, req.reserv_id])
+            let query = mysql.format(updateQuery, [Number(req.reserv_status) + 1, req.reserv_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

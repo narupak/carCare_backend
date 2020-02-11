@@ -23,7 +23,7 @@ const ReservationsController = {
     },
     async insertReservations(req, res) {
         if (req.user) {
-            await QueueModel.insertQueue(req)
+            await QueueModel.insertQueue(req.body)
             let queue = await QueueModel.getQueueLqid()
             req.body.queue_id = queue[0].queue_id
 

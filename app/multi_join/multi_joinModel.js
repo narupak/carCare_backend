@@ -73,5 +73,19 @@ const Multi_joinModel = {
             })
         })
     },
+    getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT *,if(rt.reserv_date is not null,DATE_FORMAT(rt.reserv_date,'%Y-%m-%d'),null) as reserv_date FROM reservations  as rt LEFT JOIN employee as ep ON rt.employee_id = ep.employee_id LEFT JOIN members as mb ON rt.members_id = mb.members_id LEFT JOIN car_wash as cw ON rt.car_wash_id = cw.car_wash_id LEFT JOIN type_car as tc ON rt.type_car_id = tc.type_car_id LEFT JOIN clean_service_detail as csd ON rt.clean_service_detail_id = csd.clean_service_detail_id LEFT JOIN clean_service as cs ON csd.clean_service_id = cs.clean_service_id WHERE rt.members_id = ? GROUP BY rt.start_date"
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
 }
 export default Multi_joinModel

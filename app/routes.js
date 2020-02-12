@@ -20,6 +20,7 @@ import withdraw_returnController from "./withdraw_return/withdraw_returnControll
 export function setup(router) {
     router
         .post('/login', authController.login)
+        .post('/loginMember', authController.loginMember)
         .get('/getAllEmployee', employeeController.getAllEmployee)
         .get('/getEmployeeWeid/:id', employeeController.getEmployeeWeid)
         .get('/getEmployeeWpid2', employeeController.getEmployeeWpid2)

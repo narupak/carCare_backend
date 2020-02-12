@@ -28,8 +28,8 @@ const PromotionController = {
     },
     async updatePromotionWpmid(req, res) {
         if (req.user) {
-            req.body.startDate = await formatDate(req.body.startDate)
-            req.body.endDate = await formatDate(req.body.endDate)
+            // req.body.startDate = await formatDate(req.body.startDate)
+            // req.body.endDate = await formatDate(req.body.endDate)
 
             await PromotionModel.updatePromotionWpmid(req.body)
 
@@ -54,4 +54,4 @@ const PromotionController = {
 }
 export default PromotionController
 
-let formatDate = async(date) => await moment(date).format('YY-MM-DD')
+// let formatDate = async(date) => await moment(date).format('YY-MM-DD')

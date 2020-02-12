@@ -76,10 +76,10 @@ const AuthModel = {
         })
     },
     genToken(user) {
-        return jwt.sign({ sub: user.employee_id }, config.secretKey, { expiresIn: '1h' })
+        return jwt.sign({ sub: user.employee_id }, config.secretKey, { expiresIn: '1y' })
     },
     genTokenMembers(user) {
-        return jwt.sign({ sub: user.members_id }, config.secretKey, { expiresIn: '1h' })
+        return jwt.sign({ sub: user.members_id }, config.secretKey, { expiresIn: '1y' })
     },
 }
 export default AuthModel

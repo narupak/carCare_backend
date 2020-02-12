@@ -84,7 +84,7 @@ const Multi_joinController = {
     },
     getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(req, res) {
         if (req.user) {
-            Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3().then(rs => {
+            Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(req.params.id).then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

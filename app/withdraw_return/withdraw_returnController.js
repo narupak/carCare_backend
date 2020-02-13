@@ -11,9 +11,7 @@ const Withdraw_returnController = {
                 })
             } else {
                 await Withdraw_returnModel.insertWithdraw_return(req.body)
-                let total = balance[0].amount - req.body.amount
-                req.body.total = total
-                await Wash_toolModel.updateWash_toolSamWamtid(req.body)
+
                 res.status(201).json({
                     "result": "success",
                 })
@@ -38,6 +36,10 @@ const Withdraw_returnController = {
     },
     async updatWithdraw_returnSasWwrid(req, res) {
         if (req.user) {
+            let balance = await Wash_toolModel.getWash_toolWwtid(req.body)
+            let total = balance[0].amount - req.body.amount
+            req.body.total = total
+            await Wash_toolModel.updateWash_toolSamWamtid(req.body)
             await Withdraw_returnModel.updatWithdraw_returnSasWwrid(req.body)
             res.status(201).json({
                 "result": "success",

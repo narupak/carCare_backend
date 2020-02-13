@@ -25,8 +25,18 @@ const Withdraw_returnModel = {
     },
     updatWithdraw_returnSasWwrid(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "UPDATE withdraw_return SET approve_status = ? , withdraw_amount = ? WHERE withdraw_return_id = ?";
-            let query = mysql.format(insertQuery, [req.approve_status, req.amount, req.withdraw_return_id])
+            let insertQuery = "UPDATE withdraw_return SET withdraw_amount = ? WHERE withdraw_return_id = ?";
+            let query = mysql.format(insertQuery, [req.amount, req.withdraw_return_id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    updateWash_toolSsaWwrid(req) {
+        return new Promise((resolve, reject) => {
+            let insertQuery = "UPDATE withdraw_return SET status_action = ? , approve_status = ? WHERE withdraw_return_id = ?";
+            let query = mysql.format(insertQuery, [req.status_action, req.approve_status, req.withdraw_return_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

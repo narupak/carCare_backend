@@ -66,6 +66,7 @@ export function setup(router) {
         .get('/getAllModel', modelController.getAllModel)
         .post('/updateProfile', upload_imgController.upload_img)
         .post('/insertWithdraw_return', withdraw_returnController.insertWithdraw_return)
+        .post('/updatWithdraw_returnSasWwridReturn', withdraw_returnController.updatWithdraw_returnSasWwridReturn)
         .post('/updateWash_toolSedWwrid', withdraw_returnController.updateWash_toolSedWwrid)
         .post('/updatWithdraw_returnSasWwrid', withdraw_returnController.updatWithdraw_returnSasWwrid)
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)

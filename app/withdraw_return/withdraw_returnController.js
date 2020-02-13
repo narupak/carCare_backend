@@ -11,7 +11,6 @@ const Withdraw_returnController = {
                 })
             } else {
                 await Withdraw_returnModel.insertWithdraw_return(req.body)
-
                 res.status(201).json({
                     "result": "success",
                 })
@@ -22,11 +21,7 @@ const Withdraw_returnController = {
     },
     async updateWash_toolSedWwrid(req, res) {
         if (req.user) {
-            await Withdraw_returnModel.updateWash_toolSedWwrid(req.body)
-            let balance = await Wash_toolModel.getWash_toolWwtid(req.body)
-            let total = balance[0].amount + req.body.amount
-            req.body.total = total
-            await Wash_toolModel.updateWash_toolSamWamtid(req.body)
+            await Withdraw_returnModel.updateWash_toolSsaWwrid(req.body)
             res.status(201).json({
                 "result": "success",
             })
@@ -35,6 +30,20 @@ const Withdraw_returnController = {
         }
     },
     async updatWithdraw_returnSasWwrid(req, res) {
+        if (req.user) {
+            let balance = await Wash_toolModel.getWash_toolWwtid(req.body)
+            let total = balance[0].amount - req.body.amount
+            req.body.total = total
+            await Wash_toolModel.updateWash_toolSamWamtid(req.body)
+            await Withdraw_returnModel.updatWithdraw_returnSasWwrid(req.body)
+            res.status(201).json({
+                "result": "success",
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
+    async updatWithdraw_returnSasWwridReturn(req, res) {
         if (req.user) {
             let balance = await Wash_toolModel.getWash_toolWwtid(req.body)
             let total = balance[0].amount - req.body.amount

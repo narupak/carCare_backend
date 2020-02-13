@@ -25,7 +25,7 @@ const Withdraw_returnModel = {
     },
     updatWithdraw_returnSasWwrid(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "UPDATE withdraw_return SET withdraw_amount = ? WHERE withdraw_return_id = ?";
+            let insertQuery = "UPDATE withdraw_return SET withdraw_amount = ? , approve_status = ? WHERE withdraw_return_id = ?";
             let query = mysql.format(insertQuery, [req.amount, req.withdraw_return_id])
             connection().query(query, (err, result) => {
                 if (err) throw err

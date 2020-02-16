@@ -28,7 +28,7 @@ const ReservationsModel = {
     },
     getReservationsWcwidORrsidDESC(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT *,if(rt.reserv_date is not null,DATE_FORMAT(rt.reserv_date,'%Y-%m-%d'),null) as reserv_date,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue as qe LEFT JOIN reservations  as rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.start_date"
+            let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue as qe LEFT JOIN reservations  as rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.start_date"
             let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -38,8 +38,8 @@ const ReservationsModel = {
     },
     insertReservations(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO reservations(license , total_price , reserv_date , start_date , end_date , reserv_status , employee_id,members_id,car_wash_id,type_car_id,clean_service_detail_id,queue_id ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.license, req.total_price, req.reserveDate, req.reserveTime, req.end_date, 0, req.employee_id, req.members_id, req.carwash, req.type_car_id, req.clean_service_detail_id, req.queue_id])
+            let insertQuery = "INSERT INTO reservations(total_price , start_date , end_date , reserv_status , employee_id,members_id,car_detail_id , car_wash_id,clean_service_detail_id,queue_id ) VALUES(?,?,?,?,?,?,?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.total_price, req.reserveTime, req.end_date, 0, req.employee_id, req.members_id, req.car_detail_id , req.carwash, req.clean_service_detail_id, req.queue_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

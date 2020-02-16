@@ -4,6 +4,16 @@ import bcrypt from 'bcrypt'
 import { connection } from '../../db_connection';
 
 const Clean_service_detailModel = {
+    getCleanServiceDetailByTypeCar(id){
+        return new Promise((resolve, reject) => {
+            let insertQuery = "SELECT * FROM clean_service_detail LEFT JOIN clean_service ON clean_service_detail.clean_service_id = clean_service.clean_service_id WHERE type_car_id = ?";
+            let query = mysql.format(insertQuery, [id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
     insertClean_service_detail(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO clean_service_detail(service_price , service_duration , clean_service_id , type_car_id ) VALUES(?,?,?,?)";

@@ -34,6 +34,15 @@ const Clean_service_detailController = {
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
+    },
+    getCleanServiceByTypeCar(req ,res){
+        if (req.user) {
+            Clean_service_detailModel.getCleanServiceDetailByTypeCar(req.params.id).then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
     }
 }
 export default Clean_service_detailController

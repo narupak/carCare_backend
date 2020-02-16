@@ -31,6 +31,7 @@ export function setup(router) {
         .get('/getAllMember', memberController.getAllMember)
         .get('/getAllMemberWmfL/:fname', memberController.getAllMemberWmfL)
         .get('/getMemberWcid/:id', memberController.getMemberWcid)
+        .get('/getMemberForEdit/:id', memberController.getMemberForEdit)
         .post('/insertMember', memberController.insertMember)
         .patch('/updateMemberSef_el_etWeid', memberController.updateMemberSef_el_etWeid)
         .delete('/deleteMemberWeid/:id', memberController.deleteMemberWeid)
@@ -53,6 +54,7 @@ export function setup(router) {
         .post('/insertReservations', reservationsController.insertReservations)
         .patch('/updateReservationsSrsWrsid', reservationsController.updateReservationsSrsWrsid)
         .post('/insertClean_service_detail', clean_service_detailController.insertClean_service_detail)
+        .get('/getCleanServiceByTypeCar/:id', clean_service_detailController.getCleanServiceByTypeCar)
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
         .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)
         .get('/getAllWash_tool', wash_toolController.getAllWash_tool)
@@ -80,4 +82,5 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3)
+        .get('/getDetailCarByMember/:id', multi_joinController.getDetailCarByMember)
 }

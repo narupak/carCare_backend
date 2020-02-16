@@ -77,7 +77,7 @@ const Multi_joinModel = {
                         " LEFT JOIN car_wash as cw ON rt.car_wash_id = cw.car_wash_id "+
                         " LEFT JOIN clean_service_detail as csd ON rt.clean_service_detail_id = csd.clean_service_detail_id "+
                         " LEFT JOIN clean_service as cs ON csd.clean_service_id = cs.clean_service_id "+
-                        " LEFT JOIN car_detail cd ON cd.car_detail_id = mbd.member_car_detail_id  "+
+                        " LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id  "+
                         " LEFT JOIN model m ON cd.model_id = m.model_id"+
                         " LEFT JOIN car c ON cd.car_id = c.car_id"+
                         " LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id"+ 
@@ -211,7 +211,7 @@ const Multi_joinModel = {
                         " LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id "+
                         " LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id "+
                         " LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id "+
-                        " WHERE rt.reserv_status IN(2,3) AND rt.employee_id = ?";
+                        " WHERE rt.reserv_status IN(2,3) AND rt.employee_id = ? GROUP BY rt.queue_id";
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

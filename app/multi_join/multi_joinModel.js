@@ -121,11 +121,13 @@ const Multi_joinModel = {
     getReservationByEmployee(id){
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id"+
+            let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date  FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id"+
                         " LEFT JOIN car_detail cd ON rt.car_detail_id = cd.car_detail_id"+
                         " LEFT JOIN model m ON cd.model_id = m.model_id"+
                         " LEFT JOIN car c ON cd.car_id = c.car_id"+
                         " LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id"+
+                        " LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id "+
+                        " LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id"+ 
                         " WHERE rt.employee_id = ?";
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {

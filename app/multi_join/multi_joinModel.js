@@ -107,8 +107,42 @@ const Multi_joinModel = {
                         " LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id "+
                         " LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id "+
                         " LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id "+
-                        " WHERE rt.employee_id = ? GROUP BY rt.start_date , rt.car_wash_id"
+                        " WHERE rt.employee_id = ? GROUP BY rt.queue_id"
             let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getReservationByEmployee(id){
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id"+
+                        " LEFT JOIN car_detail cd ON rt.car_detail_id = cd.car_detail_id"+
+                        " LEFT JOIN model m ON cd.model_id = m.model_id"+
+                        " LEFT JOIN car c ON cd.car_id = c.car_id"+
+                        " LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id"+
+                        " WHERE rt.employee_id = ?";
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getMemberByCarDetail(members_id , car_detail_id){
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM members mb LEFT JOIN members_detail mbd ON mb.members_id = mbd.members_id"+
+                        " WHERE mb.members_id = ? AND mbd.member_car_detail_id = ?";
+            let query = mysql.format(sql, [members_id , car_detail_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
@@ -150,16 +184,16 @@ const Multi_joinModel = {
             let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date "+
                         " FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id "+
                         " LEFT JOIN employee ep ON rt.employee_id = ep.employee_id "+
+                        " LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id "+
                         " LEFT JOIN members mb ON rt.members_id = mb.members_id "+
                         " LEFT JOIN members_detail mbd ON mbd.members_id = mb.members_id "+
-                        " LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id "+
                         " LEFT JOIN model m ON m.model_id = cd.model_id "+
                         " LEFT JOIN car c ON c.car_id = cd.car_id "+
                         " LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id "+
                         " LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id "+
                         " LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id "+
                         " LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id "+
-                        " WHERE qe.queue_id = ?"
+                        " WHERE rt.reserv_id = ? GROUP BY mbd.members_detail_id"
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

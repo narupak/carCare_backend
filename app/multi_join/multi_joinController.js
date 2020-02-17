@@ -48,8 +48,27 @@ const Multi_joinController = {
     },
     getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(req, res) {
         if (req.user) {
-            Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(req.params.id).then(rs => {
-                res.status(200).json({ result: true, data: rs })
+            let reservationDetail;
+            Multi_joinModel.getReservationByEmployee(req.params.id).then(async rs => {
+                reservationDetail = new Promise((resolve ,reject)=>{
+                    rs.map(results=>{
+                        Multi_joinModel.getMemberByCarDetail(results.members_id , results.car_detail_id).then(async result=>{
+                            const resultse = { ...results , ...{ members : result } }
+                            console.log(resultse);
+                            return resolve(resultse);
+                        }).catch(err=>{
+                            console.log(err)
+                        });
+                    })  
+                })
+                reservationDetail.then(rest=>{
+                    console.log(rest);
+                    res.status(200).json({ result: true, data: rest })
+                })
+
+
+            }).catch(err=>{
+                throw err;
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })

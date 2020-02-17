@@ -40,11 +40,25 @@ const AuthModel = {
             let query = mysql.format(checkAuth, [req.username])
             connection().query(query, (err, result) => {
                 if (err) throw err
+                let member = {
+                    id: null,
+                    username: null,
+                    password: null,
+                    fname: null,
+                    lname: null,
+                    address: null,
+                    tel: null,
+                    status: null,
+                    cashier_id: null,
+                    result: null,
+                    token: null
+                }
+                if (result.length === 0) return resolve(member)
                 result.map(rs => {
                     const hash = req.password
                     bcrypt.compare(hash, rs.members_password, (err, isValid) => {
                         if (err) throw err
-                        const member = {
+                        let member = {
                             id: rs.members_id,
                             username: rs.members_username,
                             password: rs.members_password,

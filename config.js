@@ -1,4 +1,4 @@
 export default {
     port: process.env.PORT || 80,
-    secretKey: "sss"
+    secretKey: process.env.SECRET_KEY
 }

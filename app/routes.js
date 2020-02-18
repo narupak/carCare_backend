@@ -16,6 +16,7 @@ import modelController from "./model/modelController"
 import promotionController from "./promotion/promotionController"
 import upload_imgController from "./upload_img/upload_imgController"
 import withdraw_returnController from "./withdraw_return/withdraw_returnController"
+import ProvinceController from "./province/provinceController"
 
 export function setup(router) {
     router
@@ -83,4 +84,5 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3)
         .get('/getDetailCarByMember/:id', multi_joinController.getDetailCarByMember)
+        .get('/getAllProvince', ProvinceController.getAllProvince)
 }

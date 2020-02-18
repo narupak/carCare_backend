@@ -42,7 +42,12 @@ const Withdraw_returnController = {
     async updatWithdraw_returnSasWwrid(req, res) {
         if (req.user) {
             let balance = await Wash_toolModel.getWash_toolWwtid(req.body)
-            let total = balance[0].amount - req.body.amount
+            let total = 0;
+            if(req.body.approve_status == 2){
+                total = balance[0].amount - req.body.amount;
+            }else{
+                total = balance[0].amount;
+            }
             req.body.total = total
             await Wash_toolModel.updateWash_toolSamWamtid(req.body)
             await Withdraw_returnModel.updatWithdraw_returnSasWwrid(req.body)

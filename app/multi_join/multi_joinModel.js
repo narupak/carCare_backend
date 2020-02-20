@@ -300,6 +300,20 @@ const Multi_joinModel = {
                 return resolve(getList)
             })
         })
+    },
+    getQueueForDate(date){
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT queue_id FROM queue WHERE queue_date = ?"
+            let query = mysql.format(sql , [date])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
     }
 }
 export default Multi_joinModel

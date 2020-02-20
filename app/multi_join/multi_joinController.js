@@ -52,42 +52,72 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(
+  async getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(
     req,
     res
   ) {
     if (req.user) {
       let reservationDetail;
-      Multi_joinModel.getReservationByEmployee(req.params.id)
-        .then(rs => {
-          let resultse = [];
-            rs.map(results => {
-            reservationDetail = new Promise((resolve, reject) => {
-              Multi_joinModel.getMemberByCarDetail(
-                results.members_id,
-                results.car_detail_id
-              )
-                .then(result => {
-                  result.map(resMem => {
-                    resultse.push({
-                        car_detail : results,
-                        member: resMem
-                    });
-                  });
-                  resolve(resultse);
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-            });
-          });
-          reservationDetail.then(rest => {
-            res.status(200).json({ result: true, data: rest });
-          });
-        })
-        .catch(err => {
-          throw err;
-        });
+      let resultReserve
+      let reservation = [];
+      let queue = await Multi_joinModel.getQueueForDate('2020-02-20'); 
+      reservationDetail = await Multi_joinModel.getReservationByEmployee(req.params.id);
+      for(let i=0;i<queue.length;i++){
+        let service = '';
+        for(let j=0;j<reservationDetail.length;j++){
+          if(queue[i].queue_id === reservationDetail[j].queue_id){
+            if(service === ''){
+              service = reservationDetail[j].service_name;
+            }else{
+              service += ','+reservationDetail[j].service_name;
+            }
+            resultReserve = reservationDetail[j];
+          }
+        }
+        reservation[i] =  { resultReserve : resultReserve  ,  service : service } 
+      }
+      let memberDetail;
+      let resultReserveAll = [];
+      for(let i=0;i< reservation.length;i++){
+        memberDetail = await Multi_joinModel.getMemberByCarDetail(reservation[i].resultReserve.members_id , reservation[i].resultReserve.car_detail_id);
+        for(let j=0;j<memberDetail.length;j++){
+          resultReserveAll[i] = {car_detail :  reservation[i] , member : memberDetail[j] }
+        }
+      }
+      res.status(200).json({ result: true, data: resultReserveAll });
+    // console.log(reservation);
+      // Multi_joinModel.getReservationByEmployee(req.params.id)
+      //   .then(rs => {
+      //     let resultse = [];
+      //     let service = '';
+      //       rs.map(results => {
+      //       reservationDetail = new Promise((resolve, reject) => {
+      //         Multi_joinModel.getMemberByCarDetail(
+      //           results.members_id,
+      //           results.car_detail_id
+      //         )
+      //           .then(result => {
+      //             console.log(results);
+      //             result.map(resMem => {
+      //               resultse.push({
+      //                   car_detail : results,
+      //                   member: resMem
+      //               });
+      //             });
+      //             resolve(resultse);
+      //           })
+      //           .catch(err => {
+      //             console.log(err);
+      //           });
+      //       });
+      //     });
+      //     reservationDetail.then(rest => {
+      //       res.status(200).json({ result: true, data: rest });
+      //     });
+      //   })
+      //   .catch(err => {
+      //     throw err;
+      //   });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
@@ -120,42 +150,39 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd(
+  async getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd(
     req,
     res
   ) {
     if (req.user) {
       let reservationDetail;
-      Multi_joinModel.getReservationByStaff(req.params.id)
-        .then(rs => {
-          let resultse = [];
-            rs.map(results => {
-            reservationDetail = new Promise((resolve, reject) => {
-              Multi_joinModel.getMemberByCarDetail(
-                results.members_id,
-                results.car_detail_id
-              )
-                .then(result => {
-                  result.map(resMem => {
-                    resultse.push({
-                        car_detail : results,
-                        member: resMem
-                    });
-                  });
-                  resolve(resultse);
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-            });
-          });
-          reservationDetail.then(rest => {
-            res.status(200).json({ result: true, data: rest });
-          });
-        })
-        .catch(err => {
-          throw err;
-        });
+      let resultReserve
+      let reservation = [];
+      let queue = await Multi_joinModel.getQueueForDate('2020-02-20'); 
+      reservationDetail = await Multi_joinModel.getReservationByStaff(req.params.id);
+      for(let i=0;i<queue.length;i++){
+        let service = '';
+        for(let j=0;j<reservationDetail.length;j++){
+          if(queue[i].queue_id === reservationDetail[j].queue_id){
+            if(service === ''){
+              service = reservationDetail[j].service_name;
+            }else{
+              service += ','+reservationDetail[j].service_name;
+            }
+            resultReserve = reservationDetail[j];
+          }
+        }
+        reservation[i] =  { resultReserve : resultReserve  ,  service : service } 
+      }
+      let memberDetail;
+      let resultReserveAll = [];
+      for(let i=0;i< reservation.length;i++){
+        memberDetail = await Multi_joinModel.getMemberByCarDetail(reservation[i].resultReserve.members_id , reservation[i].resultReserve.car_detail_id);
+        for(let j=0;j<memberDetail.length;j++){
+          resultReserveAll[i] = {car_detail :  reservation[i] , member : memberDetail[j] }
+        }
+      }
+      res.status(200).json({ result: true, data: resultReserveAll });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }

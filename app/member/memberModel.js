@@ -54,7 +54,9 @@ const MemberModel = {
                     let insertQuery = "INSERT INTO members(members_date , members_username , members_password , members_fname , members_lname , members_address , members_tel) VALUES(?,?,?,?,?,?,?)";
                     let query = mysql.format(insertQuery, [new Date() ,req.username, hash, req.fname, req.lname, req.address, req.tel ])
                     connection().query(query, (err, result) => {
-                        if (err) throw err
+                        if (err) {
+                            return reject(false);
+                        }
                         return resolve(result);
                     })  
             })
@@ -67,7 +69,9 @@ const MemberModel = {
                     let insertQuery = "INSERT INTO members_detail(create_datetime,member_cashier_id , member_license , members_province , member_car_detail_id, members_id ) VALUES(?,?,?,?,?,?)";
                     let query = mysql.format(insertQuery, [dateTime, req.cashier_id , req.license , req.province , req.car_detail_id , req.members_id])
                     connection().query(query, (err, result) => {
-                        if (err) throw err
+                        if (err){
+                            return reject(false);
+                        }
                         return resolve(result);
                     })  
             })

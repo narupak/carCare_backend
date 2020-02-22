@@ -199,11 +199,18 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getDetailCarByMember(req, res) {
+  async getDetailCarByMember(req, res) {
     if (req.user) {
-      Multi_joinModel.getDetailCarByMember(req.params.id).then(rs => {
-        res.status(200).json({ result: true, data: rs });
-      });
+      let detailCar;
+      let queueMember = await Multi_joinModel.getQueueForDateAndMember(moment(new Date()).format('YYYY-MM-DD') , req.params.id)
+      if(queueMember.length > 0){
+        for(let i=0;i<queueMember.length;i++){
+          detailCar = await Multi_joinModel.getDetailCarByMemberANDCar(queueMember[i].car_detail_id , queueMember[i].members_id);
+        }
+      }else{
+        detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
+      }
+      res.status(200).json({ result: true, data: detailCar });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }

@@ -31,7 +31,13 @@ const MemberController = {
   },
   async insertMember(req, res) {
     if (req.user) {
-      await MemberModel.insertMember(req.body);
+      try{
+        await MemberModel.insertMember(req.body);
+      }catch(e){
+        throw res.status(201).json({
+          result: { member : false }
+        });
+      }
       const member = await MemberModel.getMemberid();
       req.body.members_id = member[0].members_id;
       const car_detail_id = req.body.car_detail_id;
@@ -39,7 +45,13 @@ const MemberController = {
         req.body.car_detail_id = car_detail_id[i].car.value;
         req.body.license = car_detail_id[i].license;
         req.body.province = car_detail_id[i].province.value;
-        await MemberModel.insertMemberDetail(req.body);
+        try{
+          await MemberModel.insertMemberDetail(req.body);
+        }catch(e){
+          throw res.status(201).json({
+            result: { license : false }
+          });
+        }
       }
       res.status(201).json({
         result: 'success'

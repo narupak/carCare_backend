@@ -1,4 +1,5 @@
 import Multi_joinModel from './multi_joinModel';
+var moment = require('moment');
 
 const Multi_joinController = {
   getAllClean_serviceJClean_service_detail(req, res) {
@@ -60,7 +61,7 @@ const Multi_joinController = {
       let reservationDetail;
       let resultReserve
       let reservation = [];
-      let queue = await Multi_joinModel.getQueueForDate('2020-02-20'); 
+      let queue = await Multi_joinModel.getQueueForDate(moment(new Date()).format('YYYY-MM-DD')); 
       reservationDetail = await Multi_joinModel.getReservationByEmployee(req.params.id);
       for(let i=0;i<queue.length;i++){
         let service = '';
@@ -158,7 +159,7 @@ const Multi_joinController = {
       let reservationDetail;
       let resultReserve
       let reservation = [];
-      let queue = await Multi_joinModel.getQueueForDate('2020-02-20'); 
+      let queue = await Multi_joinModel.getQueueForDate(moment(new Date()).format('YYYY-MM-DD')); 
       reservationDetail = await Multi_joinModel.getReservationByStaff(req.params.id);
       for(let i=0;i<queue.length;i++){
         let service = '';

@@ -284,7 +284,7 @@ const Multi_joinModel = {
     getDetailCarByMemberANDCar(car_detail_id,id){
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM members mb"+
+            let sql = "SELECT mbd.member_car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id FROM members mb"+
                         " LEFT JOIN members_detail mbd ON mb.members_id = mbd.members_id"+
                         " LEFT JOIN car_detail cd ON mbd.member_car_detail_id = cd.car_detail_id"+
                         " LEFT JOIN model m ON cd.model_id = m.model_id "+
@@ -304,7 +304,7 @@ const Multi_joinModel = {
     getDetailCarByMember(id){
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM members mb"+
+            let sql = "SELECT mbd.member_car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id FROM members mb"+
                         " LEFT JOIN members_detail mbd ON mb.members_id = mbd.members_id"+
                         " LEFT JOIN car_detail cd ON mbd.member_car_detail_id = cd.car_detail_id"+
                         " LEFT JOIN model m ON cd.model_id = m.model_id "+

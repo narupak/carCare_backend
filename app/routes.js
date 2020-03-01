@@ -34,6 +34,7 @@ export function setup(router) {
         .get('/getMemberWcid/:id', memberController.getMemberWcid)
         .get('/getMemberForEdit/:id', memberController.getMemberForEdit)
         .post('/insertMember', memberController.insertMember)
+        .post('/insertMemberApi', memberController.insertMemberApi)
         .patch('/updateMemberSef_el_etWeid', memberController.updateMemberSef_el_etWeid)
         .delete('/deleteMemberWeid/:id', memberController.deleteMemberWeid)
         .get('/getAllBooking_detail', booking_detailController.getAllBooking_detail)
@@ -84,5 +85,8 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3)
         .get('/getDetailCarByMember/:id', multi_joinController.getDetailCarByMember)
+        .get('/getDetailCarByMemberApi/:id', multi_joinController.getDetailCarByMemberApi)
         .get('/getAllProvince', ProvinceController.getAllProvince)
+        .get('/getAllProvinceApi', ProvinceController.getAllProvinceApi)
+        
 }

@@ -28,7 +28,7 @@ const ReservationsModel = {
     },
     getReservationsWcwidORrsidDESC(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue as qe LEFT JOIN reservations  as rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.start_date"
+            let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.queue_id"
             let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

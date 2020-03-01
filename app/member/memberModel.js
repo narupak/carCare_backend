@@ -153,6 +153,26 @@ const MemberModel = {
                 return resolve(result)
             })
         })
+    },
+    getMemberByUsername(username){
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM members mb WHERE mb.members_username = ?";
+            let query = mysql.format(sql, [username]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+    getMemberDetailByLicense(license){
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM members_detail mbd WHERE mbd.member_license = ?";
+            let query = mysql.format(sql, [license]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
     }
 }
 export default MemberModel

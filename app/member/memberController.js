@@ -31,34 +31,82 @@ const MemberController = {
   },
   async insertMember(req, res) {
     if (req.user) {
-      try{
-        await MemberModel.insertMember(req.body);
-      }catch(e){
-        throw res.status(201).json({
-          result: { member : false }
+      let member = await MemberModel.getMemberByUsername(req.body.username);
+      if (member.length > 0) {
+        res.status(201).json({
+          result: { member: false }
         });
-      }
-      const member = await MemberModel.getMemberid();
-      req.body.members_id = member[0].members_id;
-      const car_detail_id = req.body.car_detail_id;
-      for (let i = 0; i < car_detail_id.length; i++) {
-        req.body.car_detail_id = car_detail_id[i].car.value;
-        req.body.license = car_detail_id[i].license;
-        req.body.province = car_detail_id[i].province.value;
-        try{
-          await MemberModel.insertMemberDetail(req.body);
-        }catch(e){
-          throw res.status(201).json({
-            result: { license : false }
+      } else {
+        let statusLicense = 0;
+        const car_detail_id = req.body.car_detail_id;
+        for (let i = 0; i < car_detail_id.length; i++) {
+        let license = await MemberModel.getMemberDetailByLicense(
+          car_detail_id[i].license
+        );
+        if(license.length > 0){
+          statusLicense = 1;
+          res.status(201).json({
+            result: { license: false }
           });
         }
+        }
+        if(statusLicense == 0){
+          await MemberModel.insertMember(req.body);
+          const member = await MemberModel.getMemberid();
+          req.body.members_id = member[0].members_id;
+          const car_detail_id = req.body.car_detail_id;
+          for (let i = 0; i < car_detail_id.length; i++) {
+            req.body.car_detail_id = car_detail_id[i].car.value;
+            req.body.license = car_detail_id[i].license;
+            req.body.province = car_detail_id[i].province.value;
+            await MemberModel.insertMemberDetail(req.body);
+            res.status(201).json({
+              result: 'success'
+            });
+          }
+        }
       }
-      res.status(201).json({
-        result: 'success'
-      });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
+  },
+  async insertMemberApi(req, res) {
+      let member = await MemberModel.getMemberByUsername(req.body.username);
+      if (member.length > 0) {
+        res.status(201).json({
+          result: 'memberFailed'
+        });
+      } else {
+        let statusLicense = 0;
+        const car_detail_id = req.body.car_detail_id;
+        for (let i = 0; i < car_detail_id.length; i++) {
+        let license = await MemberModel.getMemberDetailByLicense(
+          car_detail_id[i].license
+        );
+        if(license.length > 0){
+          statusLicense = 1;
+          res.status(201).json({
+            result: 'licenseFailed'
+          });
+        }
+        }
+        if(statusLicense == 0){
+          await MemberModel.insertMember(req.body);
+          const member = await MemberModel.getMemberid();
+          req.body.members_id = member[0].members_id;
+          const car_detail_id = req.body.car_detail_id;
+          req.body.cashier_id = req.body.cashier ? req.body.cashier : 0;
+          for (let i = 0; i < car_detail_id.length; i++) {
+            req.body.car_detail_id = car_detail_id[i].car;
+            req.body.license = car_detail_id[i].license;
+            req.body.province = car_detail_id[i].province;
+            await MemberModel.insertMemberDetail(req.body);
+            res.status(201).json({
+              result: 'success'
+            });
+          }
+        }
+      }
   },
   updateMemberSef_el_etWeid(req, res) {
     if (req.user) {
@@ -76,7 +124,6 @@ const MemberController = {
         } else {
           MemberModel.deleteMemberWeid(req.body.id).then(async res => {
             await MemberModel.deleteMemberDetail(req.body.id);
-
             await MemberModel.insertMember(req.body);
             const member = await MemberModel.getMemberid();
             req.body.members_id = member[0].members_id;
@@ -90,8 +137,8 @@ const MemberController = {
           });
         }
         res.status(201).json({
-            result: 'success'
-          });
+          result: 'success'
+        });
       });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });

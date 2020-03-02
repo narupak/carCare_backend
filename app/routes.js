@@ -17,6 +17,7 @@ import promotionController from "./promotion/promotionController"
 import upload_imgController from "./upload_img/upload_imgController"
 import withdraw_returnController from "./withdraw_return/withdraw_returnController"
 import ProvinceController from "./province/provinceController"
+import bookingController from "./api_app/booking/bookingController"
 
 export function setup(router) {
     router
@@ -88,5 +89,5 @@ export function setup(router) {
         .get('/getDetailCarByMemberApi/:id', multi_joinController.getDetailCarByMemberApi)
         .get('/getAllProvince', ProvinceController.getAllProvince)
         .get('/getAllProvinceApi', ProvinceController.getAllProvinceApi)
-        
+        .post('/insertBooking', bookingController.insertBooking)
 }

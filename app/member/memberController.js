@@ -1,5 +1,4 @@
 import MemberModel from './memberModel';
-import ModelModel from '../model/modelModel';
 
 const MemberController = {
   getAllMember(req, res) {
@@ -124,7 +123,7 @@ const MemberController = {
         } else {
           MemberModel.deleteMemberWeid(req.body.id).then(async res => {
             await MemberModel.deleteMemberDetail(req.body.id);
-            await MemberModel.insertMember(req.body);
+            await MemberModel.updateMemberSef_el_etWeid(req.body);
             const member = await MemberModel.getMemberid();
             req.body.members_id = member[0].members_id;
             const car_detail_id = req.body.car_detail_id;
@@ -140,6 +139,26 @@ const MemberController = {
           result: 'success'
         });
       });
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
+  async updateProfileMemberApi(req, res) {
+    if (req.user) {
+        await MemberModel.deleteMemberDetail(req.body.id);
+        await MemberModel.updateMemberSef_el_etWeid(req.body);
+        const member = await MemberModel.getMemberid();
+        req.body.members_id = member[0].members_id;
+        const car_detail_id = req.body.car_detail_id;
+        for (let i = 0; i < car_detail_id.length; i++) {
+          req.body.car_detail_id = car_detail_id[i].memberCarId;
+          req.body.license = car_detail_id[i].memberLicense;
+          req.body.province = car_detail_id[i].memberProvinceId;
+          await MemberModel.insertMemberDetail(req.body);
+        }
+        res.status(201).json({
+          result: 'success'
+        });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
@@ -162,6 +181,11 @@ const MemberController = {
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
+  },
+  getMemberDetailForEditApi(req , res){
+      MemberModel.getMemberDetailByMemberId(req.params.id).then(rs => {
+        res.status(200).json({ result: true, data: rs });
+      });
   }
 };
 export default MemberController;

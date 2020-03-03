@@ -86,7 +86,7 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3)
         .get('/getDetailCarByMember/:id', multi_joinController.getDetailCarByMember)
-        .get('/getDetailCarByMemberApi/:id', multi_joinController.getDetailCarByMemberApi)
+        .get('/getDetailCarByMemberApi', multi_joinController.getDetailCarByMemberApi)
         .get('/getAllProvince', ProvinceController.getAllProvince)
         .get('/getAllProvinceApi', ProvinceController.getAllProvinceApi)
         .post('/insertBooking', bookingController.insertBooking)

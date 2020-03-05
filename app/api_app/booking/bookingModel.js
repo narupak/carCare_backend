@@ -56,6 +56,7 @@ const BookingModel = {
         })
     },
     insertReservation(req) {
+        console.log(req);
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO reservations(total_price,start_date,end_date,reserv_status,employee_id,members_id,car_detail_id,car_wash_id,clean_service_detail_id,queue_id) VALUES(?,?,?,?,?,?,?,?,?,?)"
             let query = mysql.format(insertQuery, [req.total_price, req.start_time, req.end_time, 0, 0, req.member_id, req.car_detail_id, req.car_wash_id, req.clean_service_detail_id_use, req.queue_id])

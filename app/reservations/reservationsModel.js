@@ -75,6 +75,9 @@ const ReservationsModel = {
                 return resolve(result)
             })
         });
-    }
+    },
+    
+
+
 }
 export default ReservationsModel

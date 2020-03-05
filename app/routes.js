@@ -18,6 +18,8 @@ import upload_imgController from "./upload_img/upload_imgController"
 import withdraw_returnController from "./withdraw_return/withdraw_returnController"
 import ProvinceController from "./province/provinceController"
 import bookingController from "./api_app/booking/bookingController"
+import Multi_joinController from "./multi_join/multi_joinController"
+import ReservationsController from "./reservations/reservationsController"
 
 export function setup(router) {
     router

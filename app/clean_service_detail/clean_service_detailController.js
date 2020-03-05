@@ -38,6 +38,7 @@ const Clean_service_detailController = {
     getCleanServiceByTypeCar(req ,res){
         if (req.user) {
             Clean_service_detailModel.getCleanServiceDetailByTypeCar(req.params.id).then(rs => {
+                console.log(rs);
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

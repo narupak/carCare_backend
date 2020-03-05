@@ -4,6 +4,7 @@ const moment = require('moment');
 const BookingController = {
     async insertBooking(req, res) {
         if (req.user) {
+            console.log(req.body);
             let total_price = 0
             let time_arr = []
             let chk = true
@@ -13,9 +14,9 @@ const BookingController = {
             let queueDate = moment(queue[0].queue_date, "YYYY-mm-dd")
 
             if (queueDate.toString() == moment(new Date).subtract('days').startOf('day').toString()) {
-
-                for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
-                    let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id)
+                let cleanServiceDetailId = req.body.clean_service_detail_id;
+                for (let i = 0; i < cleanServiceDetailId.length; i++) {
+                    let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(cleanServiceDetailId[i])
                     total_price += clean_service_data[i].service_price
                     time_arr.push(clean_service_data[i].service_duration)
                 }
@@ -54,7 +55,7 @@ const BookingController = {
                 }
             } else {
                 for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
-                    let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id)
+                    let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id[i])
                     total_price += clean_service_data[i].service_price
                     time_arr.push(clean_service_data[i].service_duration)
                 }

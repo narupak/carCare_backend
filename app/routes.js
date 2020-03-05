@@ -92,4 +92,6 @@ export function setup(router) {
         .get('/getAllProvince', ProvinceController.getAllProvince)
         .get('/getAllProvinceApi', ProvinceController.getAllProvinceApi)
         .post('/insertBooking', bookingController.insertBooking)
+        .get('/getReservationByQueueApi/:id', ReservationsController.getReservationByQueueApi)
+        .get('/getQueueForMemberApi/:id', Multi_joinController.getQueueForMemberApi)
 }

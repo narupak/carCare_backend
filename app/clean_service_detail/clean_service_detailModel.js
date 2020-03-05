@@ -6,7 +6,7 @@ import { connection } from '../../db_connection';
 const Clean_service_detailModel = {
     getCleanServiceDetailByTypeCar(id){
         return new Promise((resolve, reject) => {
-            let insertQuery = "SELECT * FROM clean_service_detail LEFT JOIN clean_service ON clean_service_detail.clean_service_id = clean_service.clean_service_id WHERE type_car_id = ?";
+            let insertQuery = "SELECT * FROM clean_service_detail LEFT JOIN clean_service ON clean_service_detail.clean_service_id = clean_service.clean_service_id WHERE clean_service_detail.type_car_id = ?";
             let query = mysql.format(insertQuery, [id])
             connection().query(query, (err, result) => {
                 if (err) throw err

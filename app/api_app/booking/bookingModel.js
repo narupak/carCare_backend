@@ -22,7 +22,7 @@ const BookingModel = {
             let sql = "SELECT * FROM clean_service_detail WHERE clean_service_detail_id = ?"
             let query = mysql.format(sql, [req])
             connection().query(query, (err, result) => {
-                if (err) reject(err)
+                if (err) console.log(err)
                 result.map(rs => {
                     getList.push(rs);
                 })

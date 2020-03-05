@@ -65,6 +65,16 @@ const ReservationsModel = {
                 return resolve(result)
             })
         })
+    },
+    getReservationByQueue(id){
+        return new Promise((resolve , reject) => {
+            let sql = "SELECT * FROM reservations WHERE queue_id = ? GROUP BY queue_id";
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        });
     }
 }
 export default ReservationsModel

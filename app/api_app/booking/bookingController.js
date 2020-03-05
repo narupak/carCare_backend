@@ -9,79 +9,111 @@ const BookingController = {
             let chk = true
 
             let queue = await BookingModel.getAllQueue()
+            console.log(queue.length)
+            if (queue.length != 0) {
+                let queueDate = moment(queue[0].queue_date, "YYYY-mm-dd")
+                console.log(queueDate.toString() + "==" + moment(new Date).subtract('days').startOf('day').toString())
+                if (queueDate.toString() == moment(new Date).subtract('days').startOf('day').toString()) {
+                    let cleanServiceDetailId = req.body.clean_service_detail_id;
+                    for (let i = 0; i < cleanServiceDetailId.length; i++) {
+                        let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(cleanServiceDetailId[i])
+                        for (let j = 0; j < clean_service_data.length; j++) {
+                            total_price += clean_service_data[j].service_price
+                            time_arr.push(clean_service_data[j].service_duration)
+                        }
+                    }
 
-            let queueDate = moment(queue[0].queue_date, "YYYY-mm-dd")
-            console.log(queueDate.toString() +"=="+ moment(new Date).subtract('days').startOf('day').toString())
-            if (queueDate.toString() == moment(new Date).subtract('days').startOf('day').toString()) {
+                    let total_time = sumTime(req.body.start_time, time_arr)
+                    let reservatonAll = await BookingModel.getAllReservation()
+
+                    for (let i = 0; i < reservatonAll.length; i++) {
+                        let chkTimeBetween = chkTime(req.body.start_time, total_time, reservatonAll[i].start_date, reservatonAll[i].end_date)
+                        if (chkTimeBetween == false) chk = false
+                    }
+
+                    if (chk == false) {
+                        res.status(201).json({
+                            "result": "fail",
+                            "data": "Please change the time. Because time has already been in the system"
+                        })
+                    } else {
+                        await BookingModel.insertQueue()
+                        queue = await BookingModel.getAllQueue()
+                        req.body.total_price = total_price
+                        req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
+                        req.body.end_time = total_time
+                        req.body.queue_id = queue[0].queue_id
+
+                        for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
+                            req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
+                            await BookingModel.insertReservation(req.body)
+                        }
+
+                        res.status(201).json({
+                            "result": "success",
+                            "data": "success"
+                        })
+
+                    }
+                } else {
+                    for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
+                        let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id[i])
+                        for (let j = 0; j < clean_service_data.length; j++) {
+                            total_price += clean_service_data[j].service_price;
+                            time_arr.push(clean_service_data[j].service_duration)
+                        }
+                    }
+                    let total_time = sumTime(req.body.start_time, time_arr)
+                    await BookingModel.insertQueue()
+                    queue = await BookingModel.getAllQueue()
+
+                    if (queue.length > 0) {
+                        req.body.total_price = total_price
+                        req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
+                        req.body.end_time = total_time
+                        req.body.queue_id = queue[0].queue_id
+
+                        for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
+                            req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
+                            await BookingModel.insertReservation(req.body)
+                        }
+                        res.status(201).json({
+                            "result": "success",
+                            "data": "success"
+                        })
+                    }
+                }
+            } else {
                 let cleanServiceDetailId = req.body.clean_service_detail_id;
                 for (let i = 0; i < cleanServiceDetailId.length; i++) {
                     let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(cleanServiceDetailId[i])
-                    for(let j=0;j<clean_service_data.length;j++){
+                    for (let j = 0; j < clean_service_data.length; j++) {
                         total_price += clean_service_data[j].service_price
                         time_arr.push(clean_service_data[j].service_duration)
                     }
                 }
 
                 let total_time = sumTime(req.body.start_time, time_arr)
-                let reservatonAll = await BookingModel.getAllReservation()
 
-                for (let i = 0; i < reservatonAll.length; i++) {
-                    let chkTimeBetween = chkTime(req.body.start_time, total_time, reservatonAll[i].start_date, reservatonAll[i].end_date)
-                    if (chkTimeBetween == false) chk = false
-                }
-
-                if (chk == false) {
-                    res.status(201).json({
-                        "result": "fail",
-                        "data": "Please change the time. Because time has already been in the system"
-                    })
-                } else {
-                    console.log("bookingDate");
-                    await BookingModel.insertQueue()
-                    queue = await BookingModel.getAllQueue()
-                    req.body.total_price = total_price
-                    req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
-                    req.body.end_time = total_time
-                    req.body.queue_id = queue[0].queue_id
-                    if(queue[0].length > 0){
-                        for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
-                            req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
-                            await BookingModel.insertReservation(req.body)
-                        }
-                        
-                    res.status(201).json({
-                        "result": "success",
-                        "data": "success"
-                    })
-                    }
-                }
-            } else {
-                for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
-                    let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id[i])
-                    for(let j=0;j<clean_service_data.length;j++){
-                        total_price += clean_service_data[j].service_price;
-                        time_arr.push(clean_service_data[j].service_duration)
-                    }
-                }
-                let total_time = sumTime(req.body.start_time, time_arr)
-                console.log("bookingNotDate");
                 await BookingModel.insertQueue()
-                queue = await BookingModel.getAllQueue()
-                if(queue.length > 0){
-                    req.body.total_price = total_price
-                    req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
-                    req.body.end_time = total_time
-                    req.body.queue_id = queue[0].queue_id
-                    for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
-                        req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
-                        await BookingModel.insertReservation(req.body)
-                    }
-                    res.status(201).json({
-                        "result": "success",
-                        "data": "success"
-                    })
+                req.body.total_price = total_price
+                req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
+                req.body.end_time = total_time
+
+                let dataqueue = await BookingModel.getAllQueue()
+                req.body.queue_id = dataqueue[0].queue_id
+                for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
+                    req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
+                    await BookingModel.insertReservation(req.body)
                 }
+
+                res.status(201).json({
+                    "result": "success",
+                    "data": "success"
+                })
             }
+
+
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }

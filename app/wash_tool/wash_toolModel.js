@@ -18,14 +18,25 @@ const Wash_toolModel = {
             })
         })
     },
+    getWash_tool() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id"
+            let query = mysql.format(sql)
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     getWash_toolWPosition(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = 'select * from wash_tool w' +
-            ' left join position p on w.position_id = p.position_id' +
-            ' left join employee e on w.employee_id = e.employee_id' +
-            ' where w.position_id = ?';
-            let query = mysql.format(sql , [id])
+            let sql = "SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id WHERE wash_tool.position_id = ?";
+            let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
@@ -51,8 +62,8 @@ const Wash_toolModel = {
     },
     insertWash_tool(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO wash_tool(tool_name , amount , tool_status , employee_id) VALUES(?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.tool_status, req.employee_id])
+            let insertQuery = "INSERT INTO wash_tool(tool_name , amount , tool_status , employee_id , position_id) VALUES(?,?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.tool_status, req.employee_id, req.position])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

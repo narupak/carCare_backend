@@ -10,5 +10,14 @@ const Car_washController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getAllCar_wash_detail(req, res) {
+        if (req.user) {
+            Car_washModel.getAllCar_wash_detail().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default Car_washController

@@ -34,12 +34,12 @@ const Multi_joinController = {
     }
   },
   async getAllCar_detailJClean_serviceJModelJCarJType_carApi(req, res) {
-      await Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_carApi().then(
-        rs => {
-          res.status(200).json({ result: true, data: rs });
-        }
-      );
-      res.status(401).json({ error: 'UnAuthorized' });
+    await Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_carApi().then(
+      rs => {
+        res.status(200).json({ result: true, data: rs });
+      }
+    );
+    res.status(401).json({ error: 'UnAuthorized' });
   },
   getAllWithdraw_returnJWash_toolJEmployee(req, res) {
     if (req.user) {
@@ -50,7 +50,7 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  
+
   getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(req, res) {
     if (req.user) {
       Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(
@@ -181,7 +181,7 @@ const Multi_joinController = {
       );
       reservationDetail = await Multi_joinModel.getReservationByStaff(
         req.params.id
-        
+
       );
       for (let i = 0; i < queue.length; i++) {
         let service = '';
@@ -266,11 +266,11 @@ const Multi_joinController = {
     res.status(200).json({ result: true, data: detailCar });
   },
   getAllCar_detailApi(req, res) {
-      Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_car().then(
-        rs => {
-          res.status(200).json({ result: true, data: rs });
-        }
-      );
+    Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_car().then(
+      rs => {
+        res.status(200).json({ result: true, data: rs });
+      }
+    );
   },
   getQueueForMemberApi(req, res) {
     if (req.user) {

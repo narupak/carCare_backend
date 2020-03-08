@@ -53,6 +53,7 @@ export function setup(router) {
         .patch('/updateCar_detailSm_cid_tcidWcdid', car_detailController.updateCar_detailSm_cid_tcidWcdid)
         .delete('/deleteCar_detailWcdid/:id', car_detailController.deleteCar_detailWcdid)
         .get('/getAllCar_wash', car_washController.getAllCar_wash)
+        .get('/getAllCar_wash_detail', car_washController.getAllCar_wash_detail)
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
         .get('/getAllPosition', positionController.getAllPosition)
@@ -65,6 +66,7 @@ export function setup(router) {
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
         .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)
         .get('/getAllWash_tool', wash_toolController.getAllWash_tool) //test
+        .get('/getWash_tool', wash_toolController.getWash_tool)
         .get('/getWash_toolWPosition/:id', wash_toolController.getWash_toolWPosition)
         .post('/insertWash_tool', wash_toolController.insertWash_tool)
         .patch('/updateWash_toolStn_am_tsWwtid', wash_toolController.updateWash_toolStn_am_tsWwtid)

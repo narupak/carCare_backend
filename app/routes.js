@@ -64,7 +64,8 @@ export function setup(router) {
         .get('/getCleanServiceByTypeCar/:id', clean_service_detailController.getCleanServiceByTypeCar)
         .patch('/updateClean_service_detailSsp_esd_csid_tcidWcsdid', clean_service_detailController.updateClean_service_detailSsp_esd_csid_tcidWcsdid)
         .delete('/deleteClean_service_detailWcsdid/:id', clean_service_detailController.deleteClean_service_detailWcsdid)
-        .get('/getAllWash_tool', wash_toolController.getAllWash_tool)
+        .get('/getAllWash_tool', wash_toolController.getAllWash_tool) //test
+        .get('/getWash_toolWPosition/:id', wash_toolController.getWash_toolWPosition)
         .post('/insertWash_tool', wash_toolController.insertWash_tool)
         .patch('/updateWash_toolStn_am_tsWwtid', wash_toolController.updateWash_toolStn_am_tsWwtid)
         .delete('/deleteWash_toolWwtid/:id', wash_toolController.deleteWash_toolWwtid)
@@ -82,6 +83,8 @@ export function setup(router) {
         .get('/getAllClean_serviceJClean_service_detail', multi_joinController.getAllClean_serviceJClean_service_detail)
         .get('/getAllClean_service_detailJClean_serviceJType_car', multi_joinController.getAllClean_service_detailJClean_serviceJType_car)
         .get('/getAllCar_detailJClean_serviceJModelJCarJType_car', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_car)
+        .get('/getAllCar_detailJClean_serviceJModelJCarJType_carApi', multi_joinController.getAllCar_detailJClean_serviceJModelJCarJType_carApi)
+        .get('/getAllCar_detailApi', multi_joinController.getAllCar_detailApi)
         .get('/getAllWithdraw_returnJWash_toolJEmployee', multi_joinController.getAllWithdraw_returnJWash_toolJEmployee)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd)

@@ -51,6 +51,23 @@ const Multi_joinModel = {
             });
         });
     },
+    getAllCar_detailJClean_serviceJModelJCarJType_carApi() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                'SELECT * FROM car_detail as cd LEFT JOIN model as m ON cd.model_id = m.model_id ' +
+                ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
+                ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id';
+            let query = mysql.format(sql);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
     getAllWithdraw_returnJWash_toolJEmployee() {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -86,7 +103,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN model m ON cd.model_id = m.model_id' +
                 ' LEFT JOIN car c ON cd.car_id = c.car_id' +
                 ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id' +
-                ' WHERE rt.employee_id = ? AND rt.reserv_status NOT IN(3) GROUP BY qe.queue_id';
+                ' WHERE rt.reserv_status NOT IN(3) GROUP BY qe.queue_id';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -134,8 +151,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN car c ON cd.car_id = c.car_id' +
                 ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id' +
                 ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
-                ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id' +
-                ' WHERE rt.employee_id = ?';
+                ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -296,7 +312,7 @@ const Multi_joinModel = {
             });
         });
     },
-    getDetailCarByMemberANDCar(car_detail_id) {
+    getDetailCarByMemberANDCar(car_detail_id , id) {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
@@ -306,8 +322,8 @@ const Multi_joinModel = {
                 ' LEFT JOIN model m ON cd.model_id = m.model_id ' +
                 ' LEFT JOIN car c ON cd.car_id = c.car_id ' +
                 ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id ' +
-                ' WHERE mbd.member_car_detail_id != ?';
-            let query = mysql.format(sql, [car_detail_id]);
+                ' WHERE mbd.member_car_detail_id != ? AND mbd.members_id = ?';
+            let query = mysql.format(sql, [car_detail_id , id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
                 result.map(rs => {
@@ -321,15 +337,15 @@ const Multi_joinModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
-                'SELECT mbd.member_car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id FROM members mb' +
+                'SELECT cd.car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id FROM members mb' +
                 ' LEFT JOIN members_detail mbd ON mb.members_id = mbd.members_id' +
                 ' LEFT JOIN car_detail cd ON mbd.member_car_detail_id = cd.car_detail_id' +
                 ' LEFT JOIN model m ON cd.model_id = m.model_id ' +
                 ' LEFT JOIN car c ON cd.car_id = c.car_id ' +
-                ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id GROUP BY member_car_detail_id';
-            let query = mysql.format(sql);
+                ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id WHERE mbd.members_id = ? GROUP BY member_car_detail_id';
+            let query = mysql.format(sql , [id]);
             connection().query(query, (err, result) => {
-                if (err) reject(err);
+                if (err) console.log(err);
                 result.map(rs => {
                     getList.push(rs);
                 });
@@ -351,13 +367,13 @@ const Multi_joinModel = {
             });
         });
     },
-    getQueueForDateAndMember(date) {
+    getQueueForDateAndMember(date , id) {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
                 'SELECT * FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id' +
-                ' WHERE qe.queue_date = ? GROUP BY rt.queue_id';
-            let query = mysql.format(sql, [date]);
+                ' WHERE qe.queue_date = ? AND rt.members_id = ? GROUP BY rt.queue_id';
+            let query = mysql.format(sql, [date , id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
                 result.map(rs => {

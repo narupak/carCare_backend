@@ -149,6 +149,7 @@ const MemberController = {
         await MemberModel.updateMemberSef_el_etWeid(req.body);
         const member = await MemberModel.getMemberid();
         req.body.members_id = member[0].members_id;
+        req.body.cashier_id = 0;
         const car_detail_id = req.body.car_detail_id;
         for (let i = 0; i < car_detail_id.length; i++) {
           req.body.car_detail_id = car_detail_id[i].memberCarId;

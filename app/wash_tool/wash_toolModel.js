@@ -18,6 +18,23 @@ const Wash_toolModel = {
             })
         })
     },
+    getWash_toolWPosition(id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = 'select * from wash_tool w' +
+            ' left join position p on w.position_id = p.position_id' +
+            ' left join employee e on w.employee_id = e.employee_id' +
+            ' where w.position_id = ?';
+            let query = mysql.format(sql , [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     getWash_toolWwtid(req) {
         return new Promise((resolve, reject) => {
             let getList = [];

@@ -4,7 +4,7 @@ export function connection() {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
-        password: "",
+        password: "root",
         database: 'booking_service'
     });
 

@@ -23,6 +23,7 @@ const ReservationsController = {
     },
     async insertReservations(req, res) {
         if (req.user) {
+            console.log(req.body);
             await QueueModel.insertQueue(req.body)
             let queue = await QueueModel.getQueueLqid()
             req.body.queue_id = queue[0].queue_id
@@ -93,6 +94,6 @@ let formatDate = async(startTime, timeDuration) => {
         sumM += Number(timeDuration[i].split(":")[1])
     }
 
-    formatDate = moment(formatDate).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm:ss')
+    formatDate = moment(formatDate).add(sumH, 'hours').add(sumM, 'minutes').format('HH:mm:ss')
     return formatDate
 }

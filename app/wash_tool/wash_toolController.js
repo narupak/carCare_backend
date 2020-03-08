@@ -10,6 +10,15 @@ const Wash_toolController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getWash_toolWPosition: async function (res, req, next) {
+        try {
+            const { id } = req.body
+            let tool = await Wash_toolModel.getWash_toolWPosition(id)
+            res.json(tool)
+        } catch (Exception) {
+            res.send(400, Exception)
+        }
+    },
     async insertWash_tool(req, res) {
         if (req.user) {
             await Wash_toolModel.insertWash_tool(req.body)

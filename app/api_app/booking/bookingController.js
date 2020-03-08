@@ -9,11 +9,13 @@ const BookingController = {
             let chk = true
 
             let queue = await BookingModel.getAllQueue()
-            console.log(queue.length)
+                // console.log(queue.length)
             if (queue.length != 0) {
                 let queueDate = moment(queue[0].queue_date, "YYYY-mm-dd")
-                console.log(queueDate.toString() + "==" + moment(new Date).subtract('days').startOf('day').toString())
-                if (queueDate.toString() == moment(new Date).subtract('days').startOf('day').toString()) {
+                    // console.log(queueDate.toString() + "==" + moment(new Date).subtract('days').startOf('day').toString())
+                let chk_queue_date = await BookingModel.getAllQueueCheck(req.body)
+
+                if (chk_queue_date.length != 0) {
                     let cleanServiceDetailId = req.body.clean_service_detail_id;
                     for (let i = 0; i < cleanServiceDetailId.length; i++) {
                         let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(cleanServiceDetailId[i])
@@ -37,7 +39,7 @@ const BookingController = {
                             "data": "Please change the time. Because time has already been in the system"
                         })
                     } else {
-                        await BookingModel.insertQueue()
+                        await BookingModel.insertQueue(req.body)
                         queue = await BookingModel.getAllQueue()
                         req.body.total_price = total_price
                         req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
@@ -64,7 +66,7 @@ const BookingController = {
                         }
                     }
                     let total_time = sumTime(req.body.start_time, time_arr)
-                    await BookingModel.insertQueue()
+                    await BookingModel.insertQueue(req.body)
                     queue = await BookingModel.getAllQueue()
 
                     if (queue.length > 0) {
@@ -95,7 +97,7 @@ const BookingController = {
 
                 let total_time = sumTime(req.body.start_time, time_arr)
 
-                await BookingModel.insertQueue()
+                await BookingModel.insertQueue(req.body)
                 req.body.total_price = total_price
                 req.body.start_time = req.body.start_time.split(":")[0] + ":" + req.body.start_time.split(":")[1] + ":00"
                 req.body.end_time = total_time

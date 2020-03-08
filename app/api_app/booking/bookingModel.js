@@ -16,6 +16,20 @@ const BookingModel = {
             })
         })
     },
+    getAllQueueCheck(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT queue_id,queue_date FROM queue WHERE queue_date = ?"
+            let query = mysql.format(sql, [req.queueDate])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     getCleanServiceDetailWcsdid(req) {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -44,11 +58,10 @@ const BookingModel = {
             })
         })
     },
-    insertQueue() {
+    insertQueue(req) {
         return new Promise((resolve, reject) => {
-            const date = new Date()
             let insertQuery = "INSERT INTO queue(queue_date) VALUES(?)"
-            let query = mysql.format(insertQuery, [date])
+            let query = mysql.format(insertQuery, [req.queueDate])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

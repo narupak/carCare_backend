@@ -20,7 +20,7 @@ const BookingModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql = "SELECT queue_id,queue_date FROM queue WHERE queue_date = ?"
-            let query = mysql.format(sql, [req.queueDate])
+            let query = mysql.format(sql, [req.queue_date])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
@@ -61,7 +61,7 @@ const BookingModel = {
     insertQueue(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO queue(queue_date) VALUES(?)"
-            let query = mysql.format(insertQuery, [req.queueDate])
+            let query = mysql.format(insertQuery, [req.queue_date])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

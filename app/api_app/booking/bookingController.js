@@ -30,7 +30,7 @@ const BookingController = {
 
                     for (let i = 0; i < reservatonAll.length; i++) {
                         let chkTimeBetween = chkTime(req.body.start_time, total_time, reservatonAll[i].start_date, reservatonAll[i].end_date)
-                        if (chkTimeBetween == false) chk = false
+                        if (chkTimeBetween == false && reservatonAll[i].car_wash_id == req.body.car_wash_id) chk = false
                     }
 
                     if (chk == false) {

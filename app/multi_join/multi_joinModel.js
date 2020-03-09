@@ -175,7 +175,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id' +
                 ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id' +
                 ' LEFT JOIN car_wash_detail cwd ON cw.car_wash_id = cwd.car_wash_id ' +
-                ' WHERE cwd.employee_id = ?';
+                ' GROUP BY cwd.employee_id ';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);

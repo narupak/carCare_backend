@@ -33,6 +33,17 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+  getCar_detailWId(req, res) {
+    if (req.user) {
+      Multi_joinModel.getCar_detailWId(req.params.id).then(
+        rs => {
+          res.status(200).json({ result: true, data: rs });
+        }
+      );
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
   async getAllCar_detailJClean_serviceJModelJCarJType_carApi(req, res) {
     await Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_carApi().then(
       rs => {

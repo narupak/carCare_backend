@@ -28,6 +28,26 @@ const car_detailModel = {
             })
         })
     },
+    insertCar(req) {
+        return new Promise((resolve, reject) => {
+            let insertQuery = "INSERT INTO car(brand) VALUES(?);";
+            let query = mysql.format(insertQuery, [req.car_id, req.brand])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    insertModel(req) {
+        return new Promise((resolve, reject) => {
+            let insertQuery = "INSERT INTO model(model_name) VALUES(?);";
+            let query = mysql.format(insertQuery, [req.model_id, req.model_name])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
     updateCar_detailSm_cid_tcidWcdid(req) {
         return new Promise((resolve, reject) => {
             let updateQuery = "UPDATE car_detail SET model_id = ?,car_id = ? ,type_car_id = ? WHERE car_detail_id = ?";

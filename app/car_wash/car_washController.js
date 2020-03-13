@@ -19,5 +19,23 @@ const Car_washController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getEmployeeWCar_wash(req, res) {
+        if (req.user) {
+            Car_washModel.getEmployeeWCarwash1().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
+    getEmployeeWCar_wash2(req, res) {
+        if (req.user) {
+            Car_washModel.getEmployeeWCarwash2().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default Car_washController

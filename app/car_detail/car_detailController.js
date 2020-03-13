@@ -22,6 +22,30 @@ const car_detailController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    insertCar(req, res) {
+        //const { username , password , fname , lname , tel , status , position } = req.body
+        if (req.user) {
+            car_detailModel.insertCar(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
+    insertModel(req, res) {
+        //const { username , password , fname , lname , tel , status , position } = req.body
+        if (req.user) {
+            car_detailModel.insertModel(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     updateCar_detailSm_cid_tcidWcdid(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
         if (req.user) {

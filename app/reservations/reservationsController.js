@@ -23,6 +23,7 @@ const ReservationsController = {
     },
     async insertReservations(req, res) {
         if (req.user) {
+            console.log(req.body);
             await QueueModel.insertQueue(req.body)
             let queue = await QueueModel.getQueueLqid()
             req.body.queue_id = queue[0].queue_id
@@ -82,17 +83,23 @@ export default ReservationsController
 
 let formatDate = async(startTime, timeDuration) => {
 
-    let formatDate = new Date(2018, 11, 24, startTime.split(":")[0], startTime.split(":")[1], 0, 0)
-    formatDate = moment(formatDate).format('LLLL')
-
-    let sumH = 0
-    let sumM = 5
-
+    var time = moment.utc(startTime, "HH:mm:ss");
     for (let i = 0; i < timeDuration.length; i++) {
-        sumH += Number(timeDuration[i].split(":")[0])
-        sumM += Number(timeDuration[i].split(":")[1])
+    time.add(Number(timeDuration[i].split(":")[1]) , 'minutes');
     }
 
-    formatDate = moment(formatDate).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm:ss')
-    return formatDate
+    return moment(time).format('HH:mm:ss');
+    // let formatDate = new Date(2018, 11, 24, startTime.split(":")[0], startTime.split(":")[1], 0, 0)
+    // formatDate = moment(formatDate).format('LLLL')
+
+    // let sumH = 0
+    // let sumM = 5
+
+    // for (let i = 0; i < timeDuration.length; i++) {
+    //     sumH += Number(timeDuration[i].split(":")[0])
+    //     sumM += Number(timeDuration[i].split(":")[1])
+    // }
+
+    // formatDate = moment(formatDate).add(sumH, 'hours').add(sumM, 'minutes').format('hh:mm:ss')
+    // return formatDate
 }

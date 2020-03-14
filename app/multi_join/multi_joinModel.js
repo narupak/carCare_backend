@@ -146,6 +146,22 @@ const Multi_joinModel = {
             });
         });
     },
+
+    getQueueForDateByCashier(date){
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT q.queue_id FROM queue q WHERE q.queue_date = ?";
+            let query = mysql.format(sql, [date]);
+            connection().query(query, (err, result) => {
+                if (err) console.log(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
+
     getReservationByStaff(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -337,13 +353,16 @@ const Multi_joinModel = {
             });
         });
     },
-    getQueueForDate(date) {
+    getQueueForDate(date , id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = 'SELECT queue_id FROM queue WHERE queue_date = ?';
-            let query = mysql.format(sql, [date]);
+            let sql = 'SELECT q.queue_id FROM queue q'+
+                        ' LEFT JOIN reservations rv ON q.queue_id = rv.queue_id'+
+                        ' LEFT JOIN car_wash cw ON rv.car_wash_id = cw.car_wash_id'+ 
+                        ' WHERE q.queue_date = ? AND cw.employee_id = ? group by q.queue_id';
+            let query = mysql.format(sql, [date , id]);
             connection().query(query, (err, result) => {
-                if (err) reject(err);
+                if (err) console.log(err);
                 result.map(rs => {
                     getList.push(rs);
                 });

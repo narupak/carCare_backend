@@ -107,21 +107,8 @@ const MemberController = {
         }
       }
   },
-  updateMemberSef_el_etWeid(req, res) {
+  async updateMemberSef_el_etWeid(req, res) {
     if (req.user) {
-      MemberModel.getMemberForEdit(req.body.id).then(async result => {
-        if (result.length === req.body.car_detail_id.length) {
-          await MemberModel.updateMemberSef_el_etWeid(req.body);
-          const car_detail_id = req.body.car_detail_id;
-          for (let i = 0; i < car_detail_id.length; i++) {
-            req.body.car_detail_id = car_detail_id[i].editcar.value;
-            req.body.license = car_detail_id[i].editlicense;
-            req.body.province = car_detail_id[i].editprovince.value;
-            req.body.detail_id = car_detail_id[i].editDetailId;
-            MemberModel.updateMemberDetail(req.body);
-          }
-        } else {
-          MemberModel.deleteMemberWeid(req.body.id).then(async res => {
             await MemberModel.deleteMemberDetail(req.body.id);
             await MemberModel.updateMemberSef_el_etWeid(req.body);
             const member = await MemberModel.getMemberid();
@@ -133,12 +120,9 @@ const MemberController = {
               req.body.province = car_detail_id[i].editprovince.value;
               await MemberModel.insertMemberDetail(req.body);
             }
-          });
-        }
         res.status(201).json({
           result: 'success'
         });
-      });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }

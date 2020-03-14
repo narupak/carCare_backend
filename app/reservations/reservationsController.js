@@ -77,6 +77,20 @@ const ReservationsController = {
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
+    },
+    async updateStatusReservationByStaff(req,res){
+        if(req.user){
+            if(req.body.status == 0){
+                await ReservationsModel.updateStatusReservationByStaff(1 , req.body.queue_id)
+            }else{
+                await ReservationsModel.updateStatusReservationByStaff(2 , req.body.queue_id)
+            }
+            res.status(201).json({
+                "result": "success",
+            })
+        }else{
+            res.status(401).json({ 'error': 'UnAuthorized' })  
+        }
     }
 }
 export default ReservationsController

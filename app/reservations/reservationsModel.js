@@ -56,6 +56,16 @@ const ReservationsModel = {
             })
         })
     },
+    updateStatusReservationByStaff(status , queue_id){
+        return new Promise((resolve, reject) => {
+            let updateQuery = "UPDATE reservations SET reserv_status = ? WHERE queue_id = ?";
+            let query = mysql.format(updateQuery, [status , queue_id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
     deleteReservationsWrid(id) {
         return new Promise((resolve, reject) => {
             let sql = "DELETE FROM reservations WHERE reserv_id = ?"

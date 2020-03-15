@@ -207,6 +207,22 @@ const Multi_joinModel = {
             });
         });
     },
+
+    getQueueForDateByCashier(date){
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT q.queue_id FROM queue q WHERE q.queue_date = ?";
+            let query = mysql.format(sql, [date]);
+            connection().query(query, (err, result) => {
+                if (err) console.log(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
+
     getReservationByStaff(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -318,9 +334,10 @@ const Multi_joinModel = {
                 ' LEFT JOIN car c ON c.car_id = cd.car_id ' +
                 ' LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id ' +
                 ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
+                ' LEFT JOIN cae_Wash_detail cwd ON cw.car_wash_id = cwd.car_wash_id ' +
                 ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
                 ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
-                ' WHERE cw.employee_id = ? GROUP BY rt.start_date , rt.car_wash_id';
+                ' WHERE cwd.employee_id = ? GROUP BY rt.start_date , rt.car_wash_id';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -399,13 +416,16 @@ const Multi_joinModel = {
             });
         });
     },
-    getQueueForDate(date) {
+    getQueueForDate(date , id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = 'SELECT queue_id FROM queue WHERE queue_date = ?';
-            let query = mysql.format(sql, [date]);
+            let sql = 'SELECT q.queue_id FROM queue q'+
+                        ' LEFT JOIN reservations rv ON q.queue_id = rv.queue_id'+
+                        ' LEFT JOIN car_wash cw ON rv.car_wash_id = cw.car_wash_id'+ 
+                        ' WHERE q.queue_date = ? AND cw.employee_id = ? group by q.queue_id';
+            let query = mysql.format(sql, [date , id]);
             connection().query(query, (err, result) => {
-                if (err) reject(err);
+                if (err) console.log(err);
                 result.map(rs => {
                     getList.push(rs);
                 });

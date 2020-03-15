@@ -99,6 +99,7 @@ export function setup(router) {
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWqeidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWcwidGsd)
         .get('/getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3/:id', multi_joinController.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3)
+        .get('/getAllReservationsWCleaner', multi_joinController.getAllReservationsWCleaner)
         .get('/getDetailCarByMember/:id', multi_joinController.getDetailCarByMember)
         .get('/getDetailCarByMemberApi', multi_joinController.getDetailCarByMemberApi)
         .get('/getAllProvince', ProvinceController.getAllProvince)

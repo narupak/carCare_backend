@@ -131,6 +131,34 @@ const Multi_joinModel = {
             });
         });
     },
+    getAllReservationsWCleaner(id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                'SELECT *,' +
+                " if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date " +
+                ' FROM queue as qe LEFT JOIN reservations  as rt ON qe.queue_id = rt.queue_id ' +
+                ' LEFT JOIN employee as ep ON rt.employee_id = ep.employee_id ' +
+                ' LEFT JOIN members as mb ON rt.members_id = mb.members_id ' +
+                ' LEFT JOIN members_detail as mbd ON mb.members_id = mbd.members_id' +
+                ' LEFT JOIN car_wash as cw ON rt.car_wash_id = cw.car_wash_id ' +
+                ' LEFT JOIN clean_service_detail as csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
+                ' LEFT JOIN clean_service as cs ON csd.clean_service_id = cs.clean_service_id ' +
+                ' LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id  ' +
+                ' LEFT JOIN model m ON cd.model_id = m.model_id' +
+                ' LEFT JOIN car c ON cd.car_id = c.car_id' +
+                ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id' +
+                ' WHERE rt.reserv_status NOT IN(3) GROUP BY qe.queue_id';
+            let query = mysql.format(sql, [id]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
     getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(id) {
         return new Promise((resolve, reject) => {
             let getList = [];

@@ -72,6 +72,18 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+
+  getAllReservationsWCleaner(req, res) {
+    if (req.user) {
+      Multi_joinModel.getAllReservationsWCleaner(
+      ).then(rs => {
+        res.status(200).json({ result: true, data: rs });
+      });
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
+
   async getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWmbidGsd(
     req,
     res

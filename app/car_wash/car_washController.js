@@ -19,6 +19,15 @@ const Car_washController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getEmployeeWNotCarWash(req, res) {
+        if (req.user) {
+            Car_washModel.getEmployeeWNotCarWash().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
     getEmployeeWCar_wash(req, res) {
         if (req.user) {
             Car_washModel.getEmployeeWCarwash1().then(rs => {
@@ -32,6 +41,18 @@ const Car_washController = {
         if (req.user) {
             Car_washModel.getEmployeeWCarwash2().then(rs => {
                 res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
+    insertEmployeeToCar_wash(req, res) {
+        //const { username , password , fname , lname , tel , status , position } = req.body
+        if (req.user) {
+            Car_washModel.InsertEmployeeToCar_wash(req.body).then(rs => {
+                res.status(201).json({
+                    "result": "success"
+                })
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })

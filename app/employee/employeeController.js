@@ -25,7 +25,8 @@ const EmployeeController = {
                             employee_tel : result.employee_tel,
                             employee_image : result.employee_image,
                             status : result.status,
-                            position_id : result.position_id
+                            position_id : result.position_id,
+                            position_work: result.position_work
                         }
                         return formReturn;
                     }else{
@@ -38,7 +39,8 @@ const EmployeeController = {
                             employee_tel : result.employee_tel,
                             employee_image : result.employee_image.toString(),
                             status : result.status,
-                            position_id : result.position_id
+                            position_id : result.position_id,
+                            position_work: result.position_work
                         }
                         return formReturn;
                     }

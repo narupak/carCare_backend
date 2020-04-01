@@ -35,7 +35,8 @@ const Wash_toolModel = {
     getWash_toolWPosition(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id WHERE wash_tool.position_id = ?";
+            let sql = 'SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id ' +
+                'WHERE wash_tool.position_id = ?;'
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

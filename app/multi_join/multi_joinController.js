@@ -33,6 +33,28 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+  getAllCar_detailOrderByBrand(req, res) {
+    if (req.user) {
+      Multi_joinModel.getAllCar_detailOrderByBrand().then(
+        rs => {
+          res.status(200).json({ result: true, data: rs });
+        }
+      );
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
+  getCar_detailWSize(req, res) {
+    if (req.user) {
+      Multi_joinModel.getCar_detailWSize(req.params.id).then(
+        rs => {
+          res.status(200).json({ result: true, data: rs });
+        }
+      );
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
   getCar_detailWId(req, res) {
     if (req.user) {
       Multi_joinModel.getCar_detailWId(req.params.id).then(

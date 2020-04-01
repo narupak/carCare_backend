@@ -21,7 +21,7 @@ const EmployeeModel = {
     getEmployeeWeid(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM employee WHERE employee_id = ?"
+            let sql = "SELECT * FROM employee e LEFT JOIN position p ON e.position_id = p.position_id WHERE e.employee_id = ?"
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)

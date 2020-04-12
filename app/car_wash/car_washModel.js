@@ -58,7 +58,7 @@ const Car_washModel = {
                 ' LEFT JOIN reservations r ON cw.car_wash_id = r.car_wash_id' +
                 ' LEFT JOIN position p ON e.position_id = p.position_id' +
                 ' LEFT JOIN withdraw_return w ON e.employee_id = w.employee_id ' +
-                ' WHERE cwd.car_wash_id = 1  AND r.reserv_status != 3 group by cwd.employee_id;'
+                ' WHERE cwd.car_wash_id = 1 group by cwd.employee_id;'
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -110,6 +110,16 @@ const Car_washModel = {
                     getList.push(rs);
                 })
                 return resolve(getList)
+            })
+        })
+    },
+    deleteEmployeeFormCar_wash(id) {
+        return new Promise((resolve, reject) => {
+            let sql = "DELETE FROM car_wash_detail WHERE car_wash_detail_id = ?"
+            let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
             })
         })
     }

@@ -58,5 +58,14 @@ const Car_washController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    deleteEmployeeFormCar_wash(req, res) {
+        if (req.user) {
+            Car_washModel.deleteEmployeeFormCar_wash(req.params.id).then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    }
 }
 export default Car_washController

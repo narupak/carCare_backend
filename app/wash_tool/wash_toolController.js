@@ -19,7 +19,7 @@ const Wash_toolController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
-    getWash_toolWPosition(res, req, next) {
+    getWash_toolWPosition(req, res, next) {
         if (req.user) {
             Wash_toolModel.getWash_toolWPosition(req.params.id).then(rs => {
                 res.status(200).json({ result: true, data: rs })

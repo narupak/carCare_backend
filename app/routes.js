@@ -60,6 +60,7 @@ export function setup(router) {
         .get('/getEmployeeWCar_wash', car_washController.getEmployeeWCar_wash)
         .get('/getEmployeeWCar_wash2', car_washController.getEmployeeWCar_wash2)
         .post('/insertEmployeeToCar_wash', car_washController.insertEmployeeToCar_wash)
+        .delete('/deleteEmployeeFormCar_wash/:id', car_washController.deleteEmployeeFormCar_wash)
         .get('/getAllType_car', type_carController.getAllType_car)
         .get('/getAllClean_service', clean_serviceController.getAllClean_service)
         .get('/getAllPosition', positionController.getAllPosition)

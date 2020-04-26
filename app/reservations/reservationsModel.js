@@ -28,8 +28,29 @@ const ReservationsModel = {
     },
     getReservationsWcwidORrsidDESC(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.queue_id"
+            let sql = "SELECT *, TIME_FORMAT(rt.start_date, '%H:%i') as start_date, TIME_FORMAT(rt.end_date, '%H:%i') as end_date,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id WHERE rt.car_wash_id = ? AND rt.employee_id = ? GROUP BY rt.queue_id"
             let query = mysql.format(sql, [req.car_wash_id, req.employee_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+    checkReservation(req) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM reservations rt WHERE rt.start_date <= ? AND rt.end_date >= ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(3)"
+            let query = mysql.format(sql, [req.reserveTime, req.reserveTime, req.carwash])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+
+    checkReservationEndDate(req) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM reservations rt WHERE ? BETWEEN rt.start_date AND rt.end_date  AND rt.car_wash_id = ? AND  rt.reserv_status NOT IN(3) "
+            let query = mysql.format(sql, [req.end_date, req.carwash])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)

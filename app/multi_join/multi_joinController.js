@@ -178,6 +178,7 @@ const Multi_joinController = {
             }
             resultReserve = reservationDetail[j];
           }
+          console.log(service)
         }
         reservation[i] = { resultReserve: resultReserve, service: service };
       }
@@ -301,10 +302,12 @@ const Multi_joinController = {
             queueMember[i].car_detail_id,
             queueMember[i].members_id
           );
+          console.log(queueMember[i].members_id + ' 1')
         }
       } else {
         detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
       }
+      console.log(queueMember.length + ' 2')
       res.status(200).json({ result: true, data: detailCar });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });

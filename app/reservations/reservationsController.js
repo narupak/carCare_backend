@@ -24,25 +24,45 @@ const ReservationsController = {
     async insertReservations(req, res) {
         if (req.user) {
             console.log(req.body);
-            await QueueModel.insertQueue(req.body)
-            let queue = await QueueModel.getQueueLqid()
-            req.body.queue_id = queue[0].queue_id
+            let checkBooking = await ReservationsModel.checkReservation(req.body)
+            if (checkBooking.length > 0) {
+                res.status(201).json({
+                    result: { checkBooking: false }
+                });
+            } else {
+               
+                let total = 0
+                let id = req.body.clean_service_detail_id
+                let timeDutation = []
+                for (let i = 0; i < id.length; i++) {
+                    let response = await ReservationsModel.getTotalPrice(id[i])
+                    total += response[0].service_price
+                    timeDutation.push(response[0].service_duration)
+                }
+                req.body.total_price = total
+                req.body.end_date = await formatDate(req.body.reserveTime, timeDutation)
+                console.log(req.body.reserveTime);
+                let checkBookingEndDate = await ReservationsModel.checkReservationEndDate(req.body)
+                if (checkBookingEndDate.length > 0) {
+                    res.status(201).json({
+                        result: { checkBooking: false }
+                    });
+                } else {
+                    await QueueModel.insertQueue(req.body)
+                    let queue = await QueueModel.getQueueLqid()
+                    req.body.queue_id = queue[0].queue_id
+    
+                    for (let i = 0; i < id.length; i++) {
+                        req.body.clean_service_detail_id = id[i]
+                        await ReservationsModel.insertReservations(req.body)
+                    }
+                }
 
-            let total = 0
-            let id = req.body.clean_service_detail_id
-            let timeDutation = []
-            for (let i = 0; i < id.length; i++) {
-                let response = await ReservationsModel.getTotalPrice(id[i])
-                total += response[0].service_price
-                timeDutation.push(response[0].service_duration)
             }
-
-            req.body.total_price = total
-            req.body.end_date = await formatDate(req.body.reserveTime, timeDutation)
-            for (let i = 0; i < id.length; i++) {
-                req.body.clean_service_detail_id = id[i]
-                await ReservationsModel.insertReservations(req.body)
-            }
+            // for (let i = 0; i < id.length; i++) {
+            //     req.body.clean_service_detail_id = id[i]
+            //     await ReservationsModel.insertReservations(req.body)
+            // }
             res.status(201).json({
                 "result": "success",
             })
@@ -69,37 +89,37 @@ const ReservationsController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
-    getReservationByQueueApi(req , res){
-        if(req.user){
-            ReservationsModel.getReservationByQueue(req.params.id).then(rs=>{
+    getReservationByQueueApi(req, res) {
+        if (req.user) {
+            ReservationsModel.getReservationByQueue(req.params.id).then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
-    async updateStatusReservationByStaff(req,res){
-        if(req.user){
-            if(req.body.status == 0){
-                await ReservationsModel.updateStatusReservationByStaff(1 , req.body.queue_id)
-            }else{
-                await ReservationsModel.updateStatusReservationByStaff(2 , req.body.queue_id)
+    async updateStatusReservationByStaff(req, res) {
+        if (req.user) {
+            if (req.body.status == 0) {
+                await ReservationsModel.updateStatusReservationByStaff(1, req.body.queue_id)
+            } else {
+                await ReservationsModel.updateStatusReservationByStaff(2, req.body.queue_id)
             }
             res.status(201).json({
                 "result": "success",
             })
-        }else{
-            res.status(401).json({ 'error': 'UnAuthorized' })  
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
         }
     }
 }
 export default ReservationsController
 
-let formatDate = async(startTime, timeDuration) => {
+let formatDate = async (startTime, timeDuration) => {
 
     var time = moment.utc(startTime, "HH:mm:ss");
     for (let i = 0; i < timeDuration.length; i++) {
-    time.add(Number(timeDuration[i].split(":")[1]) , 'minutes');
+        time.add(Number(timeDuration[i].split(":")[1]), 'minutes');
     }
 
     return moment(time).format('HH:mm:ss');

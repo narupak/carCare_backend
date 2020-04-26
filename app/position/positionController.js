@@ -19,5 +19,14 @@ const PositionController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    getPositionWN1A3(req, res) {
+        if (req.user) {
+            PositionModel.getPositionWN1A3().then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
 }
 export default PositionController

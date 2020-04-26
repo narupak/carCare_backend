@@ -4,9 +4,9 @@ import bcrypt from 'bcrypt'
 import { connection } from '../../db_connection';
 
 const Clean_service_detailModel = {
-    getCleanServiceDetailByTypeCar(id){
+    getCleanServiceDetailByTypeCar(id) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "SELECT * FROM clean_service_detail LEFT JOIN clean_service ON clean_service_detail.clean_service_id = clean_service.clean_service_id WHERE clean_service_detail.type_car_id = ?";
+            let insertQuery = "SELECT *,MINUTE(clean_service_detail.service_duration)as service_duration FROM clean_service_detail LEFT JOIN clean_service ON clean_service_detail.clean_service_id = clean_service.clean_service_id WHERE clean_service_detail.type_car_id = ?";
             let query = mysql.format(insertQuery, [id])
             connection().query(query, (err, result) => {
                 if (err) throw err
@@ -16,8 +16,8 @@ const Clean_service_detailModel = {
     },
     insertClean_service_detail(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO clean_service_detail(service_price , service_duration , clean_service_id , type_car_id ) VALUES(?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.service_price, req.service_duration, req.clean_service_id, req.type_car_id])
+            let insertQuery = "INSERT INTO clean_service_detail(service_price , service_duration , clean_service_id , type_car_id, position_id ) VALUES(?,?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.service_price, req.service_duration, req.clean_service_id, req.type_car_id, req.position])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);
@@ -26,8 +26,8 @@ const Clean_service_detailModel = {
     },
     updateClean_service_detailSsp_esd_csid_tcidWcsdid(req) {
         return new Promise((resolve, reject) => {
-            let sql = "UPDATE clean_service_detail SET service_price = ? , service_duration = ? , clean_service_id = ? , type_car_id = ? WHERE clean_service_detail_id = ?"
-            let query = mysql.format(sql, [req.service_price, req.service_duration, req.clean_service_id, req.type_car_id, req.clean_service_detail_id])
+            let sql = "UPDATE clean_service_detail SET service_price = ? , service_duration = ? , clean_service_id = ? , type_car_id = ? , position_id = ?  WHERE clean_service_detail_id = ?"
+            let query = mysql.format(sql, [req.service_price, req.service_duration, req.clean_service_id, req.type_car_id, req.position, req.clean_service_detail_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)

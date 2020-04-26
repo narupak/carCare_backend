@@ -21,7 +21,7 @@ const Wash_toolModel = {
     getWash_tool() {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id"
+            let sql = "SELECT * FROM wash_tool LEFT JOIN clean_service  ON wash_tool.clean_service_id = clean_service.clean_service_id;"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -35,8 +35,11 @@ const Wash_toolModel = {
     getWash_toolWPosition(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = 'SELECT * FROM wash_tool LEFT JOIN position ON wash_tool.position_id = position.position_id ' +
-                'WHERE wash_tool.position_id = ?;'
+            let sql = 'SELECT * FROM wash_tool w ' +
+                ' LEFT JOIN clean_service c ON w.clean_service_id = c.clean_service_id ' +
+                ' LEFT JOIN clean_service_detail csd ON c.clean_service_id = csd.clean_service_id ' +
+                ' LEFT JOIN position p ON csd.position_id = p.position_id ' +
+                ' WHERE csd.position_id = ? GROUP BY w.wash_tool_id';
             let query = mysql.format(sql, [id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -63,8 +66,8 @@ const Wash_toolModel = {
     },
     insertWash_tool(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO wash_tool(tool_name , amount , tool_status , employee_id , position_id) VALUES(?,?,?,?,?)";
-            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.tool_status, req.employee_id, req.position])
+            let insertQuery = "INSERT INTO wash_tool(tool_name , amount , employee_id , clean_service_id) VALUES(?,?,?,?)";
+            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.employee_id, req.clean_service])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);
@@ -73,8 +76,8 @@ const Wash_toolModel = {
     },
     updateWash_toolStn_am_tsWwtid(req) {
         return new Promise((resolve, reject) => {
-            let insertQuery = "UPDATE wash_tool SET tool_name = ? ,amount = ? ,tool_status = ? WHERE wash_tool_id = ?";
-            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.tool_status, req.wash_tool_id])
+            let insertQuery = "UPDATE wash_tool SET tool_name = ? ,amount = ? ,clean_service_id = ? WHERE wash_tool_id = ?";
+            let query = mysql.format(insertQuery, [req.tool_name, req.amount, req.clean_service, req.wash_tool_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

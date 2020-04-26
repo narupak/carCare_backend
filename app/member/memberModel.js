@@ -165,10 +165,10 @@ const MemberModel = {
             })
         })
     },
-    getMemberDetailByLicense(license){
+    getMemberDetailByLicense(license , province){
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM members_detail mbd WHERE mbd.member_license = ?";
-            let query = mysql.format(sql, [license]);
+            let sql = "SELECT * FROM members_detail mbd WHERE mbd.member_license = ? AND mbd.members_province = ?";
+            let query = mysql.format(sql, [license, province]);
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)

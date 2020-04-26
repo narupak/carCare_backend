@@ -22,6 +22,17 @@ const car_detailController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    // insertdetailCar(req, res) {
+    //     if (req.user) {
+    //         car_detailModel.insertCar_detail(req.body).then(rs => {
+    //             res.status(201).json({
+    //                 "result": "success"
+    //             })
+    //         })
+    //     } else {
+    //         res.status(401).json({ 'error': 'UnAuthorized' })
+    //     }
+    // },
     insertCar(req, res) {
         //const { username , password , fname , lname , tel , status , position } = req.body
         if (req.user) {

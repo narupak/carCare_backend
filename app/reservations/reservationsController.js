@@ -30,7 +30,7 @@ const ReservationsController = {
                     result: { checkBooking: false }
                 });
             } else {
-               
+
                 let total = 0
                 let id = req.body.clean_service_detail_id
                 let timeDutation = []
@@ -41,17 +41,24 @@ const ReservationsController = {
                 }
                 req.body.total_price = total
                 req.body.end_date = await formatDate(req.body.reserveTime, timeDutation)
-                console.log(req.body.reserveTime);
+                console.log(req.body);
                 let checkBookingEndDate = await ReservationsModel.checkReservationEndDate(req.body)
+                let checkBetween = await ReservationsModel.checkReservationBetweenStartDateAndEndDate(req.body)
                 if (checkBookingEndDate.length > 0) {
                     res.status(201).json({
                         result: { checkBooking: false }
                     });
-                } else {
+                } else if (checkBetween.length > 0) {
+                    res.status(201).json({
+                        result: { checkBooking: false }
+                    });
+                }
+                else {
+                    console.log(checkBetween.length + checkBooking)
                     await QueueModel.insertQueue(req.body)
                     let queue = await QueueModel.getQueueLqid()
                     req.body.queue_id = queue[0].queue_id
-    
+
                     for (let i = 0; i < id.length; i++) {
                         req.body.clean_service_detail_id = id[i]
                         await ReservationsModel.insertReservations(req.body)

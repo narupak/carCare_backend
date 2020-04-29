@@ -18,20 +18,20 @@ const car_detailModel = {
             })
         })
     },
-    getBrandCar(brand) {
+    getBrandCar(req) {
         return new Promise((resolve, reject) => {
             let sql = "SELECT * FROM car c WHERE c.brand = ? ;";
-            let query = mysql.format(sql, [brand]);
+            let query = mysql.format(sql, [req.addBrand]);
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)
             })
         })
     },
-    getModelCar(model) {
+    getModelCar(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM model m WHERE c.model_name = ? ;";
-            let query = mysql.format(sql, [model]);
+            let sql = "SELECT * FROM model m WHERE m.model_name = ? ;";
+            let query = mysql.format(sql, [req.addModel]);
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)
@@ -51,7 +51,7 @@ const car_detailModel = {
     insertCar(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO car(brand) VALUES(?);";
-            let query = mysql.format(insertQuery, [req.brand])
+            let query = mysql.format(insertQuery, [req.addBrand])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);
@@ -61,7 +61,7 @@ const car_detailModel = {
     insertModel(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO model(model_name) VALUES(?);";
-            let query = mysql.format(insertQuery, [req.model_name])
+            let query = mysql.format(insertQuery, [req.addModel])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

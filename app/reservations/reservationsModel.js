@@ -57,6 +57,16 @@ const ReservationsModel = {
             })
         })
     },
+    checkReservationBetweenStartDateAndEndDate(req) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM reservations rt WHERE rt.start_date AND rt.end_date BETWEEN ? AND ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(3) ; "
+            let query = mysql.format(sql, [req.reserveTime, req.end_date, req.carwash])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
     insertReservations(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO reservations(total_price , start_date , end_date , reserv_status , employee_id,members_id,car_detail_id , car_wash_id,clean_service_detail_id,queue_id ) VALUES(?,?,?,?,?,?,?,?,?,?)";

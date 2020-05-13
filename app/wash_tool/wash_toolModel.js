@@ -53,8 +53,39 @@ const Wash_toolModel = {
     getWash_toolWwtid(req) {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT amount FROM wash_tool WHERE wash_tool_id = ?"
+            let sql = "SELECT amount FROM wash_tool WHERE wash_tool_id = ?;"
             let query = mysql.format(sql, [req.wash_tool_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getWash_toolIdWAssignment(wash_tool_id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM wash_tool WHERE wash_tool_id = ?;"
+            let query = mysql.format(sql, [wash_tool_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getWash_toolWAssignment(service) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * from wash_tool wt " +
+                "LEFT JOIN clean_service cs ON wt.clean_service_id = cs.clean_service_id " +
+                "LEFT JOIN clean_service_detail csd ON cs.clean_service_id = csd.clean_service_id " +
+                "WHERE cs.service_name LIKE '" + service + "' GROUP BY wt.wash_tool_id;"
+            let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 result.map(rs => {
@@ -89,6 +120,27 @@ const Wash_toolModel = {
         return new Promise((resolve, reject) => {
             let insertQuery = "UPDATE wash_tool SET amount = ? WHERE wash_tool_id = ?";
             let query = mysql.format(insertQuery, [req.total, req.wash_tool_id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    updateWash_toolByAssignment(total, wash_tool_id) {
+        console.log(req)
+        return new Promise((resolve, reject) => {
+            let insertQuery = "UPDATE wash_tool SET amount = ? WHERE wash_tool_id = ?";
+            let query = mysql.format(insertQuery, [total, wash_tool_id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    updateWash_toolByAssignment(total, wash_tool_id) {
+        return new Promise((resolve, reject) => {
+            let insertQuery = "UPDATE wash_tool SET amount = ? WHERE wash_tool_id = ?";
+            let query = mysql.format(insertQuery, [total, wash_tool_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

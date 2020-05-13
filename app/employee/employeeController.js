@@ -56,6 +56,7 @@ const EmployeeController = {
             EmployeeModel.getEmployeeWpid2().then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
+
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
@@ -83,7 +84,17 @@ const EmployeeController = {
     },
     updateEmployeeSef_el_etWeid(req, res) {
         if (req.user) {
+            console.log(req.body)
             EmployeeModel.updateEmployeeSef_el_etWeid(req.body).then(rs => {
+                res.status(200).json({ result: true, data: rs })
+            })
+        } else {
+            res.status(401).json({ 'error': 'UnAuthorized' })
+        }
+    },
+    updateEmployeeByRegister(req, res) {
+        if (req.user) {
+            EmployeeModel.updateEmployeeByRegister(req.body).then(rs => {
                 res.status(200).json({ result: true, data: rs })
             })
         } else {

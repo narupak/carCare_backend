@@ -56,9 +56,9 @@ const Multi_joinModel = {
             let getList = [];
             let sql =
                 'SELECT * FROM car  order by brand asc ';
-                // 'SELECT * FROM car_detail as cd LEFT JOIN model as m ON cd.model_id = m.model_id ' +
-                // ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
-                // ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id group by c.brand order by c.brand asc ';
+            // 'SELECT * FROM car_detail as cd LEFT JOIN model as m ON cd.model_id = m.model_id ' +
+            // ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
+            // ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id group by c.brand order by c.brand asc ';
             let query = mysql.format(sql);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -90,10 +90,10 @@ const Multi_joinModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
-            ' SELECT * FROM car_detail as cd ' +
-            ' LEFT JOIN model as m ON cd.model_id = m.model_id ' +
-            ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
-            ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id WHERE cd.car_detail_id = ? ';
+                ' SELECT * FROM car_detail as cd ' +
+                ' LEFT JOIN model as m ON cd.model_id = m.model_id ' +
+                ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
+                ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id WHERE cd.car_detail_id = ? ';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -156,7 +156,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN model m ON cd.model_id = m.model_id' +
                 ' LEFT JOIN car c ON cd.car_id = c.car_id' +
                 ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id' +
-                ' WHERE rt.reserv_status NOT IN(3) GROUP BY qe.queue_id ORDER BY rt.start_date ASC';
+                ' WHERE rt.reserv_status NOT IN(5, 6) GROUP BY qe.queue_id ORDER BY rt.start_date ASC';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -400,7 +400,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
                 ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
                 ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
-                ' WHERE rt.reserv_status IN(2,3) AND rt.employee_id = ? GROUP BY rt.queue_id';
+                ' WHERE rt.reserv_status IN(4,5) AND rt.employee_id = ? GROUP BY rt.queue_id';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
@@ -436,7 +436,7 @@ const Multi_joinModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
-            // cd.car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id
+                // cd.car_detail_id,m.model_name,c.brand,tc.size,tc.type_car_id
                 'SELECT * FROM members mb' +
                 ' LEFT JOIN members_detail mbd ON mb.members_id = mbd.members_id' +
                 ' LEFT JOIN car_detail cd ON mbd.member_car_detail_id = cd.car_detail_id' +
@@ -457,11 +457,12 @@ const Multi_joinModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql = 'SELECT q.queue_id FROM queue q' +
+                ' LEFT JOIN assignment a ON q.queue_id = a.queue_id' +
                 ' LEFT JOIN reservations rv ON q.queue_id = rv.queue_id' +
                 ' LEFT JOIN car_wash cw ON rv.car_wash_id = cw.car_wash_id' +
-                ' LEFT JOIN members m ON rv.members_id = m.members_id'+ 
-                ' LEFT JOIN car_wash_detail cwd ON cw.car_wash_id = cwd.car_wash_id'+
-                ' WHERE q.queue_date = ? AND cwd.employee_id = ? group by q.queue_id';
+                ' LEFT JOIN members m ON rv.members_id = m.members_id' +
+                ' LEFT JOIN car_wash_detail cwd ON cw.car_wash_id = cwd.car_wash_id' +
+                ' WHERE q.queue_date = ? AND a.employee_id = ? group by q.queue_id';
             let query = mysql.format(sql, [date, id]);
             connection().query(query, (err, result) => {
                 if (err) console.log(err);

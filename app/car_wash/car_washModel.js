@@ -55,9 +55,7 @@ const Car_washModel = {
             let sql = 'SELECT * FROM car_wash_detail cwd ' +
                 ' LEFT JOIN employee e ON cwd.employee_id = e.employee_id ' +
                 ' LEFT JOIN car_wash cw ON cwd.car_wash_id = cw.car_wash_id ' +
-                ' LEFT JOIN reservations r ON cw.car_wash_id = r.car_wash_id' +
                 ' LEFT JOIN position p ON e.position_id = p.position_id' +
-                ' LEFT JOIN withdraw_return w ON e.employee_id = w.employee_id ' +
                 ' WHERE cwd.car_wash_id = 1 group by cwd.employee_id;'
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
@@ -75,9 +73,7 @@ const Car_washModel = {
             let sql = 'SELECT * FROM car_wash_detail cwd ' +
                 ' LEFT JOIN employee e ON cwd.employee_id = e.employee_id ' +
                 ' LEFT JOIN car_wash cw ON cwd.car_wash_id = cw.car_wash_id ' +
-                ' LEFT JOIN reservations r ON cw.car_wash_id = r.car_wash_id' +
                 ' LEFT JOIN position p ON e.position_id = p.position_id' +
-                ' LEFT JOIN withdraw_return w ON e.employee_id = w.employee_id ' +
                 ' WHERE cwd.car_wash_id = 2 group by cwd.employee_id;'
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
@@ -89,6 +85,7 @@ const Car_washModel = {
             })
         })
     },
+
     InsertEmployeeToCar_wash(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO car_wash_detail (employee_id , car_wash_id) VALUES(?,?);";

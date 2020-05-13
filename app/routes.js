@@ -31,6 +31,7 @@ export function setup(router) {
         .get('/getEmployeeWpidN12', employeeController.getEmployeeWpidN12)
         .post('/insertEmployee', employeeController.insertEmployee)
         .patch('/updateEmployeeSef_el_etWeid', employeeController.updateEmployeeSef_el_etWeid)
+        .patch('/updateEmployeeByRegister', employeeController.updateEmployeeByRegister)
         .delete('/deleteEmployeeWeid/:id', employeeController.deleteEmployeeWeid)
         .get('/getAllMember', memberController.getAllMember)
         .get('/getAllMemberWmfL/:fname', memberController.getAllMemberWmfL)

@@ -346,4 +346,6 @@ const Multi_joinController = {
     }
   }
 };
+
+  // if (current_time >= '18:00:00') 
 export default Multi_joinController;

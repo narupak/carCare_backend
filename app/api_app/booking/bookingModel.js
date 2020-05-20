@@ -58,6 +58,21 @@ const BookingModel = {
             })
         })
     },
+    getAllReservationNOTStatus() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM reservations WHERE reserv_status NOT IN(5,6);"
+            let query = mysql.format(sql)
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    
     insertQueue(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO queue(queue_date) VALUES(?)"

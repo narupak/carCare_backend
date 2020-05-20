@@ -33,7 +33,7 @@ const Car_washController = {
     async getEmployeeWCar_wash(req, res) {
         if (req.user) {
             let time = moment();
-            let beforeTime = moment('22:59:00', "HH:mm:ss")
+            let beforeTime = moment('17:59:00', "HH:mm:ss")
             console.log("BEFORE TIME: " + moment(beforeTime).format("HH:mm:ss"));
             console.log("CURRENT TIME: " + moment(time).format("HH:mm:ss"));
             let emp = await Car_washModel.getEmployeeWCarwash1();
@@ -66,7 +66,6 @@ const Car_washController = {
                     if (emp[i].status == 1) {
                         EmployeeModel.updateEmployeeBySetStatus(0, emp[i].employee_id)
                     }
-
                 }
             }
             await Car_washModel.getEmployeeWCarwash2().then(rs => {

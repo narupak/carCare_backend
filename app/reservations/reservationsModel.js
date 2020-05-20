@@ -38,7 +38,7 @@ const ReservationsModel = {
     },
     checkReservation(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM reservations rt WHERE rt.start_date <= ? AND rt.end_date >= ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(3, 6)"
+            let sql = "SELECT * FROM reservations rt WHERE rt.start_date <= ? AND rt.end_date >= ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(5, 6)"
             let query = mysql.format(sql, [req.reserveTime, req.reserveTime, req.carwash])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -49,7 +49,7 @@ const ReservationsModel = {
 
     checkReservationEndDate(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM reservations rt WHERE ? BETWEEN rt.start_date AND rt.end_date  AND rt.car_wash_id = ? AND  rt.reserv_status NOT IN(3, 6) "
+            let sql = "SELECT * FROM reservations rt WHERE ? BETWEEN rt.start_date AND rt.end_date  AND rt.car_wash_id = ? AND  rt.reserv_status NOT IN(5, 6) "
             let query = mysql.format(sql, [req.end_date, req.carwash])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -59,7 +59,7 @@ const ReservationsModel = {
     },
     checkReservationBetweenStartDateAndEndDate(req) {
         return new Promise((resolve, reject) => {
-            let sql = "SELECT * FROM reservations rt WHERE rt.start_date AND rt.end_date BETWEEN ? AND ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(3, 6) ; "
+            let sql = "SELECT * FROM reservations rt WHERE rt.start_date AND rt.end_date BETWEEN ? AND ? AND rt.car_wash_id = ? AND rt.reserv_status NOT IN(5, 6) ; "
             let query = mysql.format(sql, [req.reserveTime, req.end_date, req.carwash])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -81,15 +81,39 @@ const ReservationsModel = {
             })
         })
     },
+    getCar_WashDetailByPosition1(car_wash_id, position_id, status, employee_id) {
+        return new Promise((resolve, reject) => {
+            let sql = 'SELECT cwd.employee_id FROM car_wash_detail as cwd ' +
+                'LEFT JOIN car_wash as cw ON cwd.car_wash_id = cw.car_wash_id ' +
+                'LEFT JOIN employee as ep ON cwd.employee_id = ep.employee_id ' +
+                'LEFT JOIN position as ps ON ep.position_id = ps.position_id ' +
+                'WHERE cwd.car_wash_id = ? AND ep.position_id = ? AND ep.status = ? AND cwd.employee_id NOT IN(?);'
+            let query = mysql.format(sql, [car_wash_id, position_id, status, employee_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
     getAssignmentByEmployee(car_wash_id, position_id) {
         return new Promise((resolve, reject) => {
             let sql = 'SELECT a.employee_id FROM assignment a ' +
                 'LEFT JOIN employee e ON a.employee_id = e.employee_id ' +
                 'LEFT JOIN queue q ON a.queue_id = q.queue_id ' +
                 'LEFT JOIN reservations rt ON q.queue_id = rt.queue_id ' +
-                'WHERE rt.car_wash_id = ? AND e.position_id = ? ' +
+                'WHERE rt.car_wash_id = ? AND e.position_id = ? AND q.queue_date = CURRENT_DATE() ' +
                 'GROUP BY a.assignment_id ORDER BY a.assignment_id DESC LIMIT 1 ;'
             let query = mysql.format(sql, [car_wash_id, position_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+    getAssginmentByQueueid(req) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM assignment WHERE queue_id = ?"
+            let query = mysql.format(sql, [req.queueId])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)
@@ -151,10 +175,40 @@ const ReservationsModel = {
             })
         })
     },
+    updateStatusReservationByStaff(status, queue_id) {
+        return new Promise((resolve, reject) => {
+            let updateQuery = "UPDATE reservations SET reserv_status = ? WHERE queue_id = ?";
+            let query = mysql.format(updateQuery, [status, queue_id])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    updateStatusReservationByMember(req) {
+        return new Promise((resolve, reject) => {
+            let updateQuery = "UPDATE reservations SET reserv_status = ? WHERE queue_id = ?";
+            let query = mysql.format(updateQuery, [req.reservStatus, req.queueId])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
     deleteReservationsWrid(id) {
         return new Promise((resolve, reject) => {
             let sql = "DELETE FROM reservations WHERE reserv_id = ?"
             let query = mysql.format(sql, [id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+    deleteAssignment(queue_id) {
+        return new Promise((resolve, reject) => {
+            let sql = "DELETE FROM assignment WHERE queue_id = ?"
+            let query = mysql.format(sql, [queue_id])
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)

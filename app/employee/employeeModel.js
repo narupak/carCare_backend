@@ -74,6 +74,34 @@ const EmployeeModel = {
             })
         })
     },
+    getManagerUsername(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM employee WHERE position_id = ? AND employee_username = ?;"
+            let query = mysql.format(sql, [req.position, req.username])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getEmployeeUsername(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM employee WHERE employee_username = ? AND position_id NOT IN(2);"
+            let query = mysql.format(sql, [req.username])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     checkCurrentTime() {
         return new Promise((resolve, reject) => {
             let getList = [];

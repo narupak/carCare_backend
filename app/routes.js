@@ -115,6 +115,8 @@ export function setup(router) {
         .post('/insertBooking', bookingController.insertBooking)
         .get('/getReservationByQueueApi/:id', ReservationsController.getReservationByQueueApi)
         .get('/getQueueForMemberApi/:id', Multi_joinController.getQueueForMemberApi)
-        .post('/updateStatusReservationByStaff' , ReservationsController.updateStatusReservationByStaff)
-        .get('/getReservationByCashier/:id' , Multi_joinController.getReservationByCashier)
-    }
+        .post('/updateStatusReservationByStaff', ReservationsController.updateStatusReservationByStaff)
+        .get('/getReservationByCashier/:id', Multi_joinController.getReservationByCashier)
+        .post('/updateStatusByCancelBooking', ReservationsController.updateStatusByCancelBooking)
+
+}

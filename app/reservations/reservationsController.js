@@ -101,14 +101,16 @@ const ReservationsController = {
                     console.log('95 ' + checkemp2.length)
                     if (checkemp.length > 0) {
                         console.log('97 ' + checkemp[0].employee_id)
-                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition
-                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition1
+                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1, checkemp[0].employee_id)
                         for (let i = 0; i < emp1.length; i++) {
-                            console.log(emp1[0].employee_id)
+                            console.log('170 ' + checkemp[0].employee_id)
                             if (checkemp[0].employee_id != emp1[i].employee_id) {
                                 await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                break;
                             } else {
                                 await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                break;
                             }
                         }
                     } else if (checkemp.length <= 0 || undefined) {
@@ -118,19 +120,21 @@ const ReservationsController = {
 
                     }
                     if (checkemp2.length <= 0 || undefined) {
-                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition
-                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1)
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
+                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
                         console.log('116 ' + emp2[0].employee_id)
                         await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
                     } else {
-                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition(
-                            checkQueue[0].car_wash_id, checkQueue[1].position_id, 1)
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1(
+                            checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
                         for (let i = 0; i < emp2.length; i++) {
-                            console.log('116 ' + emp2[0].employee_id)
+                            console.log('116 ' + emp2[i].employee_id)
                             if (checkemp2[0].employee_id != emp2[i].employee_id) {
                                 await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                break;
                             } else {
                                 await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                break;
                             }
                         }
                     }
@@ -224,16 +228,16 @@ const ReservationsController = {
                 }
             } else if (req.body.status == 3) {
                 await ReservationsModel.updateStatusReservationByStaff(4, req.body.queue_id)
-                  // คืนอุปกรณ์
-                  let borrow = await Withdraw_returnModel.getWithdraw_return(req.body.employee_id, 1);
-                  for (let i = 0; i < borrow.length; i++) {
-                      let balacne = await Wash_toolModel.getWash_toolIdWAssignment(borrow[i].wash_tool_id)
-                      total = balacne[0].amount + 1
-                      console.log([i] + ' ' + balacne[0].amount + 1)
-                      console.log(borrow.length)
-                      await Wash_toolModel.updateWash_toolByAssignment(total, borrow[i].wash_tool_id)
-                      await Withdraw_returnModel.updatWithdraw_returnByAssignment(date, 2, borrow[i].withdraw_return_id)
-                  }
+                // คืนอุปกรณ์
+                let borrow = await Withdraw_returnModel.getWithdraw_return(req.body.employee_id, 1);
+                for (let i = 0; i < borrow.length; i++) {
+                    let balacne = await Wash_toolModel.getWash_toolIdWAssignment(borrow[i].wash_tool_id)
+                    total = balacne[0].amount + 1
+                    console.log([i] + ' ' + balacne[0].amount + 1)
+                    console.log(borrow.length)
+                    await Wash_toolModel.updateWash_toolByAssignment(total, borrow[i].wash_tool_id)
+                    await Withdraw_returnModel.updatWithdraw_returnByAssignment(date, 2, borrow[i].withdraw_return_id)
+                }
             }
             res.status(201).json({
                 "result": "success",
@@ -241,6 +245,20 @@ const ReservationsController = {
         } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
+    },
+    async updateStatusByCancelBooking(req, res) {
+        await ReservationsModel.updateStatusReservationByMember(req.body)
+        let status = await ReservationsModel.getAssginmentByQueueid(req.body)
+        console.log(req.body)
+        if (status.length > 0) {
+            for (let i = 0; i < status.length; i++) {
+                await ReservationsModel.deleteAssignment(status[i].queue_id)
+            }
+        }
+        res.status(201).json({
+            "result": "success",
+        })
+
     }
 }
 export default ReservationsController

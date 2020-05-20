@@ -302,7 +302,9 @@ const Multi_joinController = {
             queueMember[i].car_detail_id,
             queueMember[i].members_id
           );
-          console.log(queueMember[i].members_id + ' 1')
+          console.log('305 ' + queueMember[i].members_id + ' 1')
+          console.log('306 ' + req.body)
+          console.log('307 ' + detailCar)
         }
       } else {
         detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
@@ -318,15 +320,8 @@ const Multi_joinController = {
     let queueMember = await Multi_joinModel.getQueueForDateAndMember(
       moment(new Date()).format('YYYY-MM-DD')
     );
-    if (queueMember.length > 0) {
-      for (let i = 0; i < queueMember.length; i++) {
-        detailCar = await Multi_joinModel.getDetailCarByMemberANDCar(
-          queueMember[i].car_detail_id
-        );
-      }
-    } else {
       detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
-    }
+    
     res.status(200).json({ result: true, data: detailCar });
   },
   getAllCar_detailApi(req, res) {
@@ -346,6 +341,4 @@ const Multi_joinController = {
     }
   }
 };
-
-  // if (current_time >= '18:00:00') 
 export default Multi_joinController;

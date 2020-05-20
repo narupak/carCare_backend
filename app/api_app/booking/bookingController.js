@@ -1,4 +1,7 @@
 import BookingModel from "./bookingModel"
+import ReservationsModel from "../../reservations/reservationsModel"
+
+
 const moment = require('moment');
 
 const BookingController = {
@@ -9,10 +12,10 @@ const BookingController = {
             let chk = true
 
             let queue = await BookingModel.getAllQueue()
-                // console.log(queue.length)
+            // console.log(queue.length)
             if (queue.length != 0) {
                 let queueDate = moment(queue[0].queue_date, "YYYY-mm-dd")
-                    // console.log(queueDate.toString() + "==" + moment(new Date).subtract('days').startOf('day').toString())
+                // console.log(queueDate.toString() + "==" + moment(new Date).subtract('days').startOf('day').toString())
                 let chk_queue_date = await BookingModel.getAllQueueCheck(req.body)
 
                 if (chk_queue_date.length != 0) {
@@ -26,7 +29,7 @@ const BookingController = {
                     }
 
                     let total_time = sumTime(req.body.start_time, time_arr)
-                    let reservatonAll = await BookingModel.getAllReservation()
+                    let reservatonAll = await BookingModel.getAllReservationNOTStatus()
 
                     for (let i = 0; i < reservatonAll.length; i++) {
                         let chkTimeBetween = chkTime(req.body.start_time, total_time, reservatonAll[i].start_date, reservatonAll[i].end_date)
@@ -50,13 +53,82 @@ const BookingController = {
                             req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
                             await BookingModel.insertReservation(req.body)
                         }
+                        let checkQueue = await ReservationsModel.getQueueForAssignment(req.body)
+                        if (checkQueue.length == 1) {
+                            console.log('70 ' + checkQueue.length)
+                            let checkemp = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                            if (checkemp.length > 0) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                for (let i = 0; i < emp1.length; i++) {
+                                    console.log('77 ' + emp1[0].employee_id)
+                                    if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                    }
+                                }
+                            } else if (checkemp.length <= 0 || undefined) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
+                            }
+                        } else if (checkQueue.length > 1) {
+                            let checkemp = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                            let checkemp2 = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[1].position_id)
+                            console.log('94 ' + checkemp.length)
+                            console.log('95 ' + checkemp2.length)
+                            if (checkemp.length > 0) {
+                                console.log('97 ' + checkemp[0].employee_id)
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition1
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1, checkemp[0].employee_id)
+                                for (let i = 0; i < emp1.length; i++) {
+                                    console.log('170 ' + checkemp[0].employee_id)
+                                    if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                        break;
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                        break;
+                                    }
+                                }
+                            } else if (checkemp.length <= 0 || undefined) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
 
+                            }
+                            if (checkemp2.length <= 0 || undefined) {
+                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
+                                    (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                                console.log('116 ' + emp2[0].employee_id)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
+                            } else {
+                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition1(
+                                    checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                                for (let i = 0; i < emp2.length; i++) {
+                                    console.log('116 ' + emp2[i].employee_id)
+                                    if (checkemp2[0].employee_id != emp2[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                        break;
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                         res.status(201).json({
                             "result": "success",
                             "data": "success"
                         })
 
                     }
+
+
                 } else {
                     for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
                         let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(req.body.clean_service_detail_id[i])
@@ -78,6 +150,74 @@ const BookingController = {
                         for (let i = 0; i < req.body.clean_service_detail_id.length; i++) {
                             req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
                             await BookingModel.insertReservation(req.body)
+                        }
+                        let checkQueue = await ReservationsModel.getQueueForAssignment(req.body)
+                        if (checkQueue.length == 1) {
+                            console.log('70 ' + checkQueue.length)
+                            let checkemp = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                            if (checkemp.length > 0) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                for (let i = 0; i < emp1.length; i++) {
+                                    console.log('77 ' + emp1[0].employee_id)
+                                    if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                    }
+                                }
+                            } else if (checkemp.length <= 0 || undefined) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
+                            }
+                        } else if (checkQueue.length > 1) {
+                            let checkemp = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                            let checkemp2 = await ReservationsModel.getAssignmentByEmployee
+                                (checkQueue[0].car_wash_id, checkQueue[1].position_id)
+                            console.log('94 ' + checkemp.length)
+                            console.log('95 ' + checkemp2.length)
+                            if (checkemp.length > 0) {
+                                console.log('97 ' + checkemp[0].employee_id)
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition1
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1, checkemp[0].employee_id)
+                                for (let i = 0; i < emp1.length; i++) {
+                                    console.log('170 ' + checkemp[0].employee_id)
+                                    if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                        break;
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                        break;
+                                    }
+                                }
+                            } else if (checkemp.length <= 0 || undefined) {
+                                let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
+
+                            }
+                            if (checkemp2.length <= 0 || undefined) {
+                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1)
+                                console.log('116 ' + emp2[0].employee_id)
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
+                            } else {
+                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition1(
+                                    checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                                for (let i = 0; i < emp2.length; i++) {
+                                    console.log('116 ' + emp2[i].employee_id)
+                                    if (checkemp2[0].employee_id != emp2[i].employee_id) {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                        break;
+                                    } else {
+                                        await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         res.status(201).json({
                             "result": "success",
@@ -108,7 +248,74 @@ const BookingController = {
                     req.body.clean_service_detail_id_use = req.body.clean_service_detail_id[i]
                     await BookingModel.insertReservation(req.body)
                 }
+                let checkQueue = await ReservationsModel.getQueueForAssignment(req.body)
+                if (checkQueue.length == 1) {
+                    console.log('70 ' + checkQueue.length)
+                    let checkemp = await ReservationsModel.getAssignmentByEmployee
+                        (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                    if (checkemp.length > 0) {
+                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                        for (let i = 0; i < emp1.length; i++) {
+                            console.log('77 ' + emp1[0].employee_id)
+                            if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                            } else {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                            }
+                        }
+                    } else if (checkemp.length <= 0 || undefined) {
+                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
+                    }
+                } else if (checkQueue.length > 1) {
+                    let checkemp = await ReservationsModel.getAssignmentByEmployee
+                        (checkQueue[0].car_wash_id, checkQueue[0].position_id)
+                    let checkemp2 = await ReservationsModel.getAssignmentByEmployee
+                        (checkQueue[0].car_wash_id, checkQueue[1].position_id)
+                    console.log('94 ' + checkemp.length)
+                    console.log('95 ' + checkemp2.length)
+                    if (checkemp.length > 0) {
+                        console.log('97 ' + checkemp[0].employee_id)
+                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition1
+                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1, checkemp[0].employee_id)
+                        for (let i = 0; i < emp1.length; i++) {
+                            console.log('170 ' + checkemp[0].employee_id)
+                            if (checkemp[0].employee_id != emp1[i].employee_id) {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                break;
+                            } else {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp1[i].employee_id)
+                                break;
+                            }
+                        }
+                    } else if (checkemp.length <= 0 || undefined) {
+                        let emp1 = await ReservationsModel.getCar_WashDetailByPosition
+                            (checkQueue[0].car_wash_id, checkQueue[0].position_id, 1)
+                        await ReservationsModel.insertAssignment(req.body.queue_id, emp1[0].employee_id)
 
+                    }
+                    if (checkemp2.length <= 0 || undefined) {
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
+                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                        console.log('116 ' + emp2[0].employee_id)
+                        await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
+                    } else {
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1(
+                            checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                        for (let i = 0; i < emp2.length; i++) {
+                            console.log('116 ' + emp2[i].employee_id)
+                            if (checkemp2[0].employee_id != emp2[i].employee_id) {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                break;
+                            } else {
+                                await ReservationsModel.insertAssignment(req.body.queue_id, emp2[i].employee_id)
+                                break;
+                            }
+                        }
+                    }
+                }
                 res.status(201).json({
                     "result": "success",
                     "data": "success"

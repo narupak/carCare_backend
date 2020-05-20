@@ -82,8 +82,9 @@ const MemberController = {
       const car_detail_id = req.body.car_detail_id;
       for (let i = 0; i < car_detail_id.length; i++) {
         let license = await MemberModel.getMemberDetailByLicense(
-          car_detail_id[i].license
+          car_detail_id[i].license, car_detail_id[i].province
         );
+        console.log(car_detail_id[i].license, car_detail_id[i].province);
         if (license.length > 0) {
           statusLicense = 1;
           res.status(201).json({

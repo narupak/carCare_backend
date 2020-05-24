@@ -120,8 +120,8 @@ const ReservationsController = {
 
                     }
                     if (checkemp2.length <= 0 || undefined) {
-                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
-                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition
+                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1)
                         console.log('116 ' + emp2[0].employee_id)
                         await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
                     } else {

@@ -30,6 +30,7 @@ const MemberController = {
   },
   async insertMember(req, res) {
     if (req.user) {
+      console.log(req.body.car_detail_id)
       let member = await MemberModel.getMemberByUsername(req.body.username);
       if (member.length > 0) {
         res.status(201).json({

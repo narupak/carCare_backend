@@ -77,6 +77,7 @@ const Multi_joinModel = {
                 ' LEFT JOIN car as c ON cd.car_id = c.car_id ' +
                 ' LEFT JOIN type_car as tc ON cd.type_car_id = tc.type_car_id WHERE c.car_id = ? ';
             let query = mysql.format(sql, [id]);
+            console.log(query)
             connection().query(query, (err, result) => {
                 if (err) reject(err);
                 result.map(rs => {
@@ -402,6 +403,88 @@ const Multi_joinModel = {
                 ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
                 ' WHERE rt.reserv_status IN(4,5) AND rt.employee_id = ? GROUP BY rt.queue_id';
             let query = mysql.format(sql, [id]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
+    getAllReservationWReport(date) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date " +
+                ' FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id ' +
+                ' LEFT JOIN employee ep ON rt.employee_id = ep.employee_id ' +
+                ' LEFT JOIN members mb ON rt.members_id = mb.members_id ' +
+                ' LEFT JOIN members_detail mbd ON mbd.members_id = mb.members_id ' +
+                ' LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id ' +
+                ' LEFT JOIN model m ON m.model_id = cd.model_id ' +
+                ' LEFT JOIN car c ON c.car_id = cd.car_id ' +
+                ' LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id ' +
+                ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
+                ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
+                ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
+                ' WHERE rt.reserv_status IN(5) AND qe.queue_date = ? GROUP BY rt.queue_id';
+            let query = mysql.format(sql, [date]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
+    getAllReservationWReportSelectMonth(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date " +
+                ' FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id ' +
+                ' LEFT JOIN employee ep ON rt.employee_id = ep.employee_id ' +
+                ' LEFT JOIN members mb ON rt.members_id = mb.members_id ' +
+                ' LEFT JOIN members_detail mbd ON mbd.members_id = mb.members_id ' +
+                ' LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id ' +
+                ' LEFT JOIN model m ON m.model_id = cd.model_id ' +
+                ' LEFT JOIN car c ON c.car_id = cd.car_id ' +
+                ' LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id ' +
+                ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
+                ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
+                ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
+                ' WHERE rt.reserv_status IN(5) AND MONTH(qe.queue_date) = ? GROUP BY rt.queue_id';
+            let query = mysql.format(sql, [req.code]);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
+
+    getAllReservationWQueue(queue_id) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                "SELECT *,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date " +
+                ' FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id ' +
+                ' LEFT JOIN employee ep ON rt.employee_id = ep.employee_id ' +
+                ' LEFT JOIN members mb ON rt.members_id = mb.members_id ' +
+                ' LEFT JOIN members_detail mbd ON mbd.members_id = mb.members_id ' +
+                ' LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id ' +
+                ' LEFT JOIN model m ON m.model_id = cd.model_id ' +
+                ' LEFT JOIN car c ON c.car_id = cd.car_id ' +
+                ' LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id ' +
+                ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
+                ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
+                ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
+                ' WHERE rt.reserv_status IN(5) AND rt.queue_id = ? group by cs.service_name';
+            let query = mysql.format(sql, [queue_id]);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
                 result.map(rs => {

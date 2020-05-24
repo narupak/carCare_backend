@@ -44,6 +44,15 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+
+  getAllCar_detailOrderByBrandApi(req, res) {
+    Multi_joinModel.getAllCar_detailOrderByBrand().then(
+      rs => {
+        res.status(200).json({ result: true, data: rs });
+      }
+    );
+  },
+
   getCar_detailWSize(req, res) {
     if (req.user) {
       Multi_joinModel.getCar_detailWSize(req.params.id).then(
@@ -54,6 +63,14 @@ const Multi_joinController = {
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
+  },
+  getCar_detailWSizeApi(req, res) {
+    console.log(req.params.id)
+    Multi_joinModel.getCar_detailWSize(req.params.id).then(
+      rs => {
+        res.status(200).json({ result: true, data: rs });
+      }
+    );
   },
   getCar_detailWId(req, res) {
     if (req.user) {
@@ -66,6 +83,16 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+
+  getCar_detailWIdApi(req, res) {
+    console.log(req.params.id)
+    Multi_joinModel.getCar_detailWId(req.params.id).then(
+      rs => {
+        res.status(200).json({ result: true, data: rs });
+      }
+    );
+  },
+
   async getAllCar_detailJClean_serviceJModelJCarJType_carApi(req, res) {
     await Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_carApi().then(
       rs => {
@@ -115,7 +142,7 @@ const Multi_joinController = {
       let resultReserve;
       let reservation = [];
       let queue = await Multi_joinModel.getQueueForDate(
-        moment(new Date()).format('YYYY-MM-DD') , req.params.id
+        moment(new Date()).format('YYYY-MM-DD'), req.params.id
       );
       reservationDetail = await Multi_joinModel.getReservationByEmployee(
         req.params.id
@@ -239,7 +266,7 @@ const Multi_joinController = {
       let resultReserve;
       let reservation = [];
       let queue = await Multi_joinModel.getQueueForDate(
-        moment(new Date()).format('YYYY-MM-DD') , req.params.id
+        moment(new Date()).format('YYYY-MM-DD'), req.params.id
       );
       reservationDetail = await Multi_joinModel.getReservationByStaff(
         req.params.id
@@ -289,6 +316,68 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
+  async getAllReservationWReport(req, res) {
+    if (req.user) {
+      let queueReport;
+      let reservationReport = [];
+      console.log('323 ' + req.body.date)
+      let data = await Multi_joinModel.getAllReservationWReport(req.body.date)
+      console.log(data.length)
+      for (let i = 0; i < data.length; i++) {
+        let service = '';
+        console.log(data[i].queue_id)
+        let queue = await Multi_joinModel.getAllReservationWQueue(data[i].queue_id)
+        for (let j = 0; j < queue.length; j++) {
+          if (data[i].queue_id === queue[j].queue_id) {
+            if (service === '') {
+              service = queue[j].service_name;
+            } else {
+              service += ',' + queue[j].service_name;
+            }
+          }
+          queueReport = queue[j];
+          reservationReport[i] = { resultReserve: queueReport, service: service }
+
+          console.log(reservationReport)
+        }
+      }
+      res.status(200).json({ result: true, data: reservationReport });
+
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
+  async getAllReservationWReportSelectMonth(req, res) {
+    if (req.user) {
+      let queueReport;
+      let reservationReport = [];
+      console.log('354 ' + req.body)
+      let data = await Multi_joinModel.getAllReservationWReportSelectMonth(req.body)
+      console.log(data.length)
+      for (let i = 0; i < data.length; i++) {
+        let service = '';
+        console.log(data[i].queue_id)
+        let queue = await Multi_joinModel.getAllReservationWQueue(data[i].queue_id)
+        for (let j = 0; j < queue.length; j++) {
+          if (data[i].queue_id === queue[j].queue_id) {
+            if (service === '') {
+              service = queue[j].service_name;
+            } else {
+              service += ',' + queue[j].service_name;
+            }
+          }
+          queueReport = queue[j];
+          reservationReport[i] = { resultReserve: queueReport, service: service }
+
+          console.log(reservationReport)
+        }
+      }
+      res.status(200).json({ result: true, data: reservationReport });
+
+    } else {
+      res.status(401).json({ error: 'UnAuthorized' });
+    }
+  },
   async getDetailCarByMember(req, res) {
     if (req.user) {
       let detailCar;
@@ -320,8 +409,8 @@ const Multi_joinController = {
     let queueMember = await Multi_joinModel.getQueueForDateAndMember(
       moment(new Date()).format('YYYY-MM-DD')
     );
-      detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
-    
+    detailCar = await Multi_joinModel.getDetailCarByMember(req.params.id);
+
     res.status(200).json({ result: true, data: detailCar });
   },
   getAllCar_detailApi(req, res) {

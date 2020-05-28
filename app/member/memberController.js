@@ -21,7 +21,7 @@ const MemberController = {
   },
   getMemberWcid(req, res) {
     if (req.user) {
-      MemberModel.getMemberWcid(req.params.id).then(rs => {
+      MemberModel.getMemberWcid().then(rs => {
         res.status(200).json({ result: true, data: rs });
       });
     } else {

@@ -17,6 +17,36 @@ const PromotionModel = {
             })
         })
     },
+    getAllPromotionById(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT promotion_id,detail,DATE_FORMAT(date_start,'%Y-%m-%d') as date_start ,DATE_FORMAT(date_end,'%Y-%m-%d') as date_end,discount_percent,promo_img " +
+           ' FROM promotion WHERE promotion_id = ?;'
+            let query = mysql.format(sql, [req.promotion_id])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+    getPromotionByDate(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT promotion_id,detail,DATE_FORMAT(date_start,'%Y-%m-%d') as date_start ,DATE_FORMAT(date_end,'%Y-%m-%d') as date_end,discount_percent,promo_img FROM promotion" +
+            ' WHERE ? BETWEEN date_start AND date_end';
+            let query = mysql.format(sql, [req.queue_date])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
     insertPromotion(req) {
         return new Promise((resolve, reject) => {
             let sql = "INSERT INTO promotion(detail ,date_start ,date_end ,discount_percent , promo_img) VALUES (?,?,?,?,?)"

@@ -113,7 +113,17 @@ const ReservationsModel = {
     getAssginmentByQueueid(req) {
         return new Promise((resolve, reject) => {
             let sql = "SELECT * FROM assignment WHERE queue_id = ?"
-            let query = mysql.format(sql, [req.queueId])
+            let query = mysql.format(sql, [req.queueId])            
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                return resolve(result)
+            })
+        })
+    },
+    getAssginmentByTimeOver(queueId) {
+        return new Promise((resolve, reject) => {
+            let sql = "SELECT * FROM assignment WHERE queue_id = ?"
+            let query = mysql.format(sql, [queueId])            
             connection().query(query, (err, result) => {
                 if (err) reject(err)
                 return resolve(result)
@@ -189,6 +199,16 @@ const ReservationsModel = {
         return new Promise((resolve, reject) => {
             let updateQuery = "UPDATE reservations SET reserv_status = ? WHERE queue_id = ?";
             let query = mysql.format(updateQuery, [req.reservStatus, req.queueId])
+            connection().query(query, (err, result) => {
+                if (err) throw err
+                return resolve(result);
+            })
+        })
+    },
+    updateStatusReservationByTimeOver(queueId) {
+        return new Promise((resolve, reject) => {
+            let updateQuery = "UPDATE reservations SET reserv_status = 6 WHERE queue_id = ?";
+            let query = mysql.format(updateQuery, [queueId])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

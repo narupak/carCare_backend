@@ -30,6 +30,23 @@ const BookingModel = {
             })
         })
     },
+    CheckDateRepeat(req) {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql = "SELECT * FROM reservations rt " +
+                'LEFT JOIN queue q ON rt.queue_id = q.queue_id ' +
+                'WHERE ? BETWEEN rt.start_date AND rt.end_date AND rt.car_wash_id = ? AND  rt.reserv_status NOT IN(5,6) AND q.queue_date = ?;'
+            let query = mysql.format(sql, [req.start_time, req.car_wash_id, req.queue_date])
+            connection().query(query, (err, result) => {
+                if (err) reject(err)
+                result.map(rs => {
+                    getList.push(rs);
+                })
+                return resolve(getList)
+            })
+        })
+    },
+
     getCleanServiceDetailWcsdid(req) {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -61,7 +78,7 @@ const BookingModel = {
     getAllReservationNOTStatus() {
         return new Promise((resolve, reject) => {
             let getList = [];
-            let sql = "SELECT * FROM reservations WHERE reserv_status NOT IN(5,6);"
+            let sql = "SELECT * FROM reservations rt LEFT JOIN queue q ON rt.queue_id = q.queue_id WHERE reserv_status NOT IN(5,6);"
             let query = mysql.format(sql)
             connection().query(query, (err, result) => {
                 if (err) reject(err)
@@ -72,7 +89,7 @@ const BookingModel = {
             })
         })
     },
-    
+
     insertQueue(req) {
         return new Promise((resolve, reject) => {
             let insertQuery = "INSERT INTO queue(queue_date) VALUES(?)"
@@ -86,8 +103,8 @@ const BookingModel = {
     insertReservation(req) {
         console.log(req);
         return new Promise((resolve, reject) => {
-            let insertQuery = "INSERT INTO reservations(total_price,start_date,end_date,reserv_status,employee_id,members_id,car_detail_id,car_wash_id,clean_service_detail_id,queue_id) VALUES(?,?,?,?,?,?,?,?,?,?)"
-            let query = mysql.format(insertQuery, [req.total_price, req.start_time, req.end_time, 0, 0, req.member_id, req.car_detail_id, req.car_wash_id, req.clean_service_detail_id_use, req.queue_id])
+            let insertQuery = "INSERT INTO reservations(total_price,start_date,end_date,reserv_status,employee_id,members_id,car_detail_id,car_wash_id,clean_service_detail_id,queue_id,promotion_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+            let query = mysql.format(insertQuery, [req.total_price, req.start_time, req.end_time, 0, 0, req.member_id, req.car_detail_id, req.car_wash_id, req.clean_service_detail_id_use, req.queue_id, req.promotion_id])
             connection().query(query, (err, result) => {
                 if (err) throw err
                 return resolve(result);

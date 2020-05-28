@@ -1,5 +1,6 @@
 import BookingModel from "./bookingModel"
 import ReservationsModel from "../../reservations/reservationsModel"
+import PromotionModel from "../../promotion/promotionModel";
 
 
 const moment = require('moment');
@@ -7,10 +8,11 @@ const moment = require('moment');
 const BookingController = {
     async insertBooking(req, res) {
         if (req.user) {
+            console.log(req.body);
             let total_price = 0
             let time_arr = []
             let chk = true
-
+            let perMoney = 0;
             let queue = await BookingModel.getAllQueue()
             // console.log(queue.length)
             if (queue.length != 0) {
@@ -19,6 +21,7 @@ const BookingController = {
                 let chk_queue_date = await BookingModel.getAllQueueCheck(req.body)
 
                 if (chk_queue_date.length != 0) {
+                    console.log(req.body)
                     let cleanServiceDetailId = req.body.clean_service_detail_id;
                     for (let i = 0; i < cleanServiceDetailId.length; i++) {
                         let clean_service_data = await BookingModel.getCleanServiceDetailWcsdid(cleanServiceDetailId[i])
@@ -27,13 +30,22 @@ const BookingController = {
                             time_arr.push(clean_service_data[j].service_duration)
                         }
                     }
-
+                    console.log('33 ' + req.body.promotion_id);
+                    if (req.body.promotion_id !== 0){
+                        let pro = await PromotionModel.getAllPromotionById(req.body);
+                        console.log(pro[0].discount_percent);
+                        
+                        total_price = total_price - (total_price * (pro[0].discount_percent / 100));
+                        console.log('38 ' + perMoney)
+                    }
                     let total_time = sumTime(req.body.start_time, time_arr)
                     let reservatonAll = await BookingModel.getAllReservationNOTStatus()
 
                     for (let i = 0; i < reservatonAll.length; i++) {
                         let chkTimeBetween = chkTime(req.body.start_time, total_time, reservatonAll[i].start_date, reservatonAll[i].end_date)
-                        if (chkTimeBetween == false && reservatonAll[i].car_wash_id == req.body.car_wash_id) chk = false
+                        // if (chkTimeBetween == false && reservatonAll[i].car_wash_id == req.body.car_wash_id) chk = false
+                        let checkDate = await BookingModel.CheckDateRepeat(req.body);
+                        if (checkDate.length > 0) chk = false;
                     }
 
                     if (chk == false) {
@@ -102,8 +114,8 @@ const BookingController = {
 
                             }
                             if (checkemp2.length <= 0 || undefined) {
-                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
-                                    (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                                let emp2 = await ReservationsModel.getCar_WashDetailByPosition
+                                    (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1)
                                 console.log('116 ' + emp2[0].employee_id)
                                 await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
                             } else {
@@ -137,6 +149,15 @@ const BookingController = {
                             time_arr.push(clean_service_data[j].service_duration)
                         }
                     }
+                    console.log('33 ' + req.body.promotion_id);
+                    if (req.body.promotion_id !== 0){
+                        let pro = await PromotionModel.getAllPromotionById(req.body);
+                        console.log(pro[0].discount_percent);
+                        
+                        total_price = total_price - (total_price * (pro[0].discount_percent / 100));
+                        console.log('38 ' + perMoney)
+                    }
+                    
                     let total_time = sumTime(req.body.start_time, time_arr)
                     await BookingModel.insertQueue(req.body)
                     queue = await BookingModel.getAllQueue()
@@ -234,7 +255,13 @@ const BookingController = {
                         time_arr.push(clean_service_data[j].service_duration)
                     }
                 }
-
+                if (req.body.promotion_id !== 0){
+                    let pro = await PromotionModel.getAllPromotionById(req.body);
+                    console.log(pro[0].discount_percent);
+                    
+                    total_price = total_price - (total_price * (pro[0].discount_percent / 100));
+                    console.log('38 ' + perMoney)
+                }
                 let total_time = sumTime(req.body.start_time, time_arr)
 
                 await BookingModel.insertQueue(req.body)
@@ -297,8 +324,8 @@ const BookingController = {
 
                     }
                     if (checkemp2.length <= 0 || undefined) {
-                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition1
-                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, checkemp2[0].employee_id)
+                        let emp2 = await ReservationsModel.getCar_WashDetailByPosition
+                            (checkQueue[0].car_wash_id, checkQueue[1].position_id, 1, emp2[0].employee_id)
                         console.log('116 ' + emp2[0].employee_id)
                         await ReservationsModel.insertAssignment(req.body.queue_id, emp2[0].employee_id)
                     } else {

@@ -168,6 +168,21 @@ const Multi_joinModel = {
             });
         });
     },
+    getOverTimeBooking() {
+        return new Promise((resolve, reject) => {
+            let getList = [];
+            let sql =
+                'SELECT * FROM reservations rt LEFT JOIN queue qe ON rt.queue_id = qe.queue_id WHERE rt.reserv_status = 0 GROUP BY rt.queue_id;'
+            let query = mysql.format(sql);
+            connection().query(query, (err, result) => {
+                if (err) reject(err);
+                result.map(rs => {
+                    getList.push(rs);
+                });
+                return resolve(getList);
+            });
+        });
+    },
     getAllReservationsWCleaner(id) {
         return new Promise((resolve, reject) => {
             let getList = [];
@@ -385,7 +400,7 @@ const Multi_joinModel = {
             });
         });
     },
-    getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(id) {
+    getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3() {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
@@ -401,8 +416,8 @@ const Multi_joinModel = {
                 ' LEFT JOIN car_wash cw ON rt.car_wash_id = cw.car_wash_id ' +
                 ' LEFT JOIN clean_service_detail csd ON rt.clean_service_detail_id = csd.clean_service_detail_id ' +
                 ' LEFT JOIN clean_service cs ON csd.clean_service_id = cs.clean_service_id ' +
-                ' WHERE rt.reserv_status IN(4,5) AND rt.employee_id = ? GROUP BY rt.queue_id';
-            let query = mysql.format(sql, [id]);
+                ' WHERE rt.reserv_status IN(4,5) GROUP BY rt.queue_id';
+            let query = mysql.format(sql);
             connection().query(query, (err, result) => {
                 if (err) reject(err);
                 result.map(rs => {
@@ -527,6 +542,8 @@ const Multi_joinModel = {
                 ' LEFT JOIN car c ON cd.car_id = c.car_id ' +
                 ' LEFT JOIN type_car tc ON cd.type_car_id = tc.type_car_id WHERE mbd.members_id = ? GROUP BY member_car_detail_id';
             let query = mysql.format(sql, [id]);
+            console.log(query);
+            
             connection().query(query, (err, result) => {
                 if (err) console.log(err);
                 result.map(rs => {
@@ -576,13 +593,15 @@ const Multi_joinModel = {
         return new Promise((resolve, reject) => {
             let getList = [];
             let sql =
-                "SELECT rt.queue_id,rt.total_price,rt.start_date,rt.end_date,rt.reserv_status,CONCAT(m.model_name,' ',c.brand,' ',tc.size) as car,cw.car_wash_name" +
+                "SELECT rt.queue_id,rt.total_price,rt.start_date,rt.end_date,if(qe.queue_date is not null,DATE_FORMAT(qe.queue_date,'%Y-%m-%d'),null) as queue_date , " +
+                " rt.reserv_status,CONCAT(m.model_name,' ',c.brand,' ',tc.size) as car,cw.car_wash_name, p.discount_percent" +
                 ' FROM queue qe LEFT JOIN reservations rt ON qe.queue_id = rt.queue_id' +
                 ' LEFT JOIN car_detail cd ON cd.car_detail_id = rt.car_detail_id' +
                 ' LEFT JOIN model m ON m.model_id = cd.model_id' +
                 ' LEFT JOIN car c ON c.car_id = cd.car_id' +
                 ' LEFT JOIN type_car tc ON tc.type_car_id = cd.type_car_id' +
                 ' LEFT JOIN car_wash cw ON cw.car_wash_id = rt.car_wash_id' +
+                ' LEFT JOIN promotion p ON rt.promotion_id = p.promotion_id' +
                 ' WHERE rt.members_id = ? GROUP BY rt.queue_id';
             let query = mysql.format(sql, [id]);
             connection().query(query, (err, result) => {

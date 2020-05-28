@@ -5,30 +5,30 @@ var formidable = require('formidable');
 const PromotionController = {
     getAllPromotion(req, res) {
         if (req.user) {
-            PromotionModel.getAllPromotion().then(rs=>{
-                const results = rs.map(rest=>{
+            PromotionModel.getAllPromotion().then(rs => {
+                const results = rs.map(rest => {
                     let formReturn = {};
-                if(rest.promo_img == null){
-                    formReturn = {
-                        promotion_id : rest.promotion_id,
-                        detail : rest.detail,
-                        date_start : rest.date_start,
-                        date_end : rest.date_end,
-                        discount_percent : rest.discount_percent,
-                        promo_img : rest.promo_img,
+                    if (rest.promo_img == null) {
+                        formReturn = {
+                            promotion_id: rest.promotion_id,
+                            detail: rest.detail,
+                            date_start: rest.date_start,
+                            date_end: rest.date_end,
+                            discount_percent: rest.discount_percent,
+                            promo_img: rest.promo_img,
+                        }
+                        return formReturn;
+                    } else {
+                        formReturn = {
+                            promotion_id: rest.promotion_id,
+                            detail: rest.detail,
+                            date_start: rest.date_start,
+                            date_end: rest.date_end,
+                            discount_percent: rest.discount_percent,
+                            promo_img: rest.promo_img.toString(),
+                        }
+                        return formReturn;
                     }
-                    return formReturn;
-                }else{
-                    formReturn = {
-                        promotion_id : rest.promotion_id,
-                        detail : rest.detail,
-                        date_start : rest.date_start,
-                        date_end : rest.date_end,
-                        discount_percent : rest.discount_percent,
-                        promo_img : rest.promo_img.toString(),
-                    }
-                    return formReturn;
-                }
                 })
                 res.status(200).json({ result: true, data: results })
             })
@@ -37,32 +37,38 @@ const PromotionController = {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
+    async getPromotionByDate(req, res) {
+        console.log(req.body);
+        await PromotionModel.getPromotionByDate(req.body).then(rs => {
+            res.status(200).json({ result: true, data: rs })
+        })
+    },
     async insertPromotion(req, res) {
         if (req.user) {
             var form = new formidable.IncomingForm();
-            form.parse(req , async function(err , fields , files){
-                if(err){
+            form.parse(req, async function (err, fields, files) {
+                if (err) {
                     console.error(err.message);
                     return;
-                }else{
+                } else {
                     await PromotionModel.insertPromotion(fields)
                     res.status(201).json({
                         "result": "success",
                     })
                 }
             })
-        }else{
+        } else {
             res.status(401).json({ 'error': 'UnAuthorized' })
         }
     },
     async updatePromotionWpmid(req, res) {
         if (req.user) {
             var form = new formidable.IncomingForm();
-            form.parse(req , async function(err , fields , files){
-                if(err){
+            form.parse(req, async function (err, fields, files) {
+                if (err) {
                     console.error(err.message);
                     return;
-                }else{
+                } else {
                     await PromotionModel.updatePromotionWpmid(fields)
                     res.status(201).json({
                         "result": "success",

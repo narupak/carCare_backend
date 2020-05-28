@@ -1,19 +1,20 @@
 import Multi_joinModel from './multi_joinModel';
+import ReservationsModel from '../reservations/reservationsModel';
 var moment = require('moment');
 
 const Multi_joinController = {
-  getAllClean_serviceJClean_service_detail(req, res) {
+  async getAllClean_serviceJClean_service_detail(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllClean_serviceJClean_service_detail().then(rs => {
+      await Multi_joinModel.getAllClean_serviceJClean_service_detail().then(rs => {
         res.status(200).json({ result: true, data: rs });
       });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllClean_service_detailJClean_serviceJType_car(req, res) {
+  async getAllClean_service_detailJClean_serviceJType_car(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllClean_service_detailJClean_serviceJType_car().then(
+      await Multi_joinModel.getAllClean_service_detailJClean_serviceJType_car().then(
         rs => {
           res.status(200).json({ result: true, data: rs });
         }
@@ -22,9 +23,9 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllCar_detailJClean_serviceJModelJCarJType_car(req, res) {
+  async getAllCar_detailJClean_serviceJModelJCarJType_car(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_car().then(
+      await Multi_joinModel.getAllCar_detailJClean_serviceJModelJCarJType_car().then(
         rs => {
           res.status(200).json({ result: true, data: rs });
         }
@@ -33,9 +34,9 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllCar_detailOrderByBrand(req, res) {
+  async getAllCar_detailOrderByBrand(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllCar_detailOrderByBrand().then(
+      await Multi_joinModel.getAllCar_detailOrderByBrand().then(
         rs => {
           res.status(200).json({ result: true, data: rs });
         }
@@ -45,17 +46,17 @@ const Multi_joinController = {
     }
   },
 
-  getAllCar_detailOrderByBrandApi(req, res) {
-    Multi_joinModel.getAllCar_detailOrderByBrand().then(
+  async getAllCar_detailOrderByBrandApi(req, res) {
+    await Multi_joinModel.getAllCar_detailOrderByBrand().then(
       rs => {
         res.status(200).json({ result: true, data: rs });
       }
     );
   },
 
-  getCar_detailWSize(req, res) {
+  async getCar_detailWSize(req, res) {
     if (req.user) {
-      Multi_joinModel.getCar_detailWSize(req.params.id).then(
+      await Multi_joinModel.getCar_detailWSize(req.params.id).then(
         rs => {
           res.status(200).json({ result: true, data: rs });
         }
@@ -64,17 +65,17 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getCar_detailWSizeApi(req, res) {
+  async getCar_detailWSizeApi(req, res) {
     console.log(req.params.id)
-    Multi_joinModel.getCar_detailWSize(req.params.id).then(
+    await Multi_joinModel.getCar_detailWSize(req.params.id).then(
       rs => {
         res.status(200).json({ result: true, data: rs });
       }
     );
   },
-  getCar_detailWId(req, res) {
+  async getCar_detailWId(req, res) {
     if (req.user) {
-      Multi_joinModel.getCar_detailWId(req.params.id).then(
+      await Multi_joinModel.getCar_detailWId(req.params.id).then(
         rs => {
           res.status(200).json({ result: true, data: rs });
         }
@@ -84,9 +85,9 @@ const Multi_joinController = {
     }
   },
 
-  getCar_detailWIdApi(req, res) {
+  async getCar_detailWIdApi(req, res) {
     console.log(req.params.id)
-    Multi_joinModel.getCar_detailWId(req.params.id).then(
+    await Multi_joinModel.getCar_detailWId(req.params.id).then(
       rs => {
         res.status(200).json({ result: true, data: rs });
       }
@@ -101,9 +102,9 @@ const Multi_joinController = {
     );
     res.status(401).json({ error: 'UnAuthorized' });
   },
-  getAllWithdraw_returnJWash_toolJEmployee(req, res) {
+  async getAllWithdraw_returnJWash_toolJEmployee(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllWithdraw_returnJWash_toolJEmployee().then(rs => {
+      await Multi_joinModel.getAllWithdraw_returnJWash_toolJEmployee().then(rs => {
         res.status(200).json({ result: true, data: rs });
       });
     } else {
@@ -111,20 +112,39 @@ const Multi_joinController = {
     }
   },
 
-  getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(req, res) {
+  async getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition(
-      ).then(rs => {
-        res.status(200).json({ result: true, data: rs });
-      });
+      let reserv = await Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPosition()
+      let over = await Multi_joinModel.getOverTimeBooking();
+      let timeOver = '00:15:00'
+      let total;
+      let time = moment();
+      for (let i = 0; i < over.length; i++) {
+        console.log('118 ' + over[i].start_date)
+        total = over[i].start_date.split(":")[0] + ":" + timeOver.split(":")[1] + ":00";
+        console.log('123 ' + total)
+
+        if (moment(time).format("HH:mm:ss") > total) {
+          await ReservationsModel.updateStatusReservationByTimeOver(over[i].queue_id)
+          let status = await ReservationsModel.getAssginmentByTimeOver(over[i].queue_id)
+          if (status.length > 0) {
+            for (let i = 0; i < status.length; i++) {
+              await ReservationsModel.deleteAssignment(status[i].queue_id)
+
+            }
+          }
+          console.log(status)
+        }
+      }
+      res.status(200).json({ result: true, data: reserv });
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
 
-  getAllReservationsWCleaner(req, res) {
+  async getAllReservationsWCleaner(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllReservationsWCleaner(
+      await Multi_joinModel.getAllReservationsWCleaner(
       ).then(rs => {
         res.status(200).json({ result: true, data: rs });
       });
@@ -305,13 +325,32 @@ const Multi_joinController = {
       res.status(401).json({ error: 'UnAuthorized' });
     }
   },
-  getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(req, res) {
+  async getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(req, res) {
     if (req.user) {
-      Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3(
-        req.params.id
-      ).then(rs => {
-        res.status(200).json({ result: true, data: rs });
-      });
+      let queueReport;
+      let reservationReport = [];
+      let data = await Multi_joinModel.getAllReservationsJEmployeeJMembersJCar_washJType_carJPositionWrs3()
+      console.log(data.length);
+      for (let i = 0; i < data.length; i++) {
+        let service = '';
+        console.log(data[i].queue_id)
+        let queue = await Multi_joinModel.getAllReservationWQueue(data[i].queue_id)
+        for (let j = 0; j < queue.length; j++) {
+          if (data[i].queue_id === queue[j].queue_id) {
+            if (service === '') {
+              service = queue[j].service_name;
+            } else {
+              service += ',' + queue[j].service_name;
+            }
+          }
+          queueReport = queue[j];
+          reservationReport[i] = { resultReserve: queueReport, service: service }
+
+          console.log(reservationReport)
+        }
+      }
+      res.status(200).json({ result: true, data: reservationReport });
+      ;
     } else {
       res.status(401).json({ error: 'UnAuthorized' });
     }
